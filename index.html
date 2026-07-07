@@ -265,6 +265,25 @@
   <div style="padding:14px" id="calendario-contenido"></div>
 </div>
 
+<!-- MODAL MATERIA -->
+<div class="modal-overlay" id="modal-materia" onclick="if(event.target===this)cerrarModal('materia')">
+  <div class="modal">
+    <div class="modal-title" id="modal-materia-titulo">Materia</div>
+    <div id="modal-materia-info" style="font-size:12px;color:var(--text3);margin-bottom:14px;line-height:1.6"></div>
+    <input type="hidden" id="mm-id">
+    <div class="field-wrap">
+      <div class="field-label">Estado</div>
+      <div class="pill-sel" id="mm-estado-pills"></div>
+    </div>
+    <div class="field-wrap" id="mm-nota-wrap" style="display:none">
+      <div class="field-label">Nota final (opcional)</div>
+      <input type="number" class="input" id="mm-nota" min="1" max="10" step="1" placeholder="Ej: 8">
+    </div>
+    <button class="btn-primary" onclick="guardarEstadoMateria()">Guardar</button>
+    <button class="btn-ghost" onclick="cerrarModal('materia')">Cerrar</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -305,6 +324,7 @@ function _dbVacia(){
   return {
     perfil:{nombre:''},
     materias:{},
+    notas:{},
     examenes:[],
     ultimoBackup:null,
   };
@@ -551,13 +571,217 @@ window.addEventListener('popstate', e=>{
 });
 
 // ═══════════════════════════════════════════════════════════════
-// HOME (placeholder — se completa en la tarea de malla curricular)
+// MALLA CURRICULAR REAL — Ingeniería Química, FIUBA, Plan de Estudios 2023
+// Fuente: RESCD 2023-880, Actualización 2023 (Plan 2020), 3696 horas / 231 créditos / 11 cuatrimestres
 // ═══════════════════════════════════════════════════════════════
+const MATERIAS_CBC=[
+  {id:'cbc-sociedad', nombre:'Introducción al Conocimiento de la Sociedad y el Estado', ciclo:'cbc', creditos:4, horas:64},
+  {id:'cbc-penscient', nombre:'Introducción al Pensamiento Científico', ciclo:'cbc', creditos:4, horas:64},
+  {id:'cbc-algebraA', nombre:'Álgebra A', ciclo:'cbc', creditos:9, horas:144},
+  {id:'cbc-analisisA', nombre:'Análisis Matemático A', ciclo:'cbc', creditos:9, horas:144},
+  {id:'cbc-penscomp', nombre:'Pensamiento Computacional', ciclo:'cbc', creditos:6, horas:96},
+  {id:'cbc-fisica', nombre:'Física', ciclo:'cbc', creditos:6, horas:96},
+];
+const MATERIAS_OBLIGATORIAS=[
+  {id:'analisis2', nombre:'Análisis Matemático II', cuatrimestre:3, creditos:8, horas:128, correlativas:['CBC']},
+  {id:'quimicagen', nombre:'Química General', cuatrimestre:3, creditos:8, horas:128, correlativas:['CBC']},
+  {id:'introquimica', nombre:'Introducción a Ingeniería Química', cuatrimestre:3, creditos:4, horas:64, correlativas:['CBC']},
+
+  {id:'algebralineal', nombre:'Álgebra Lineal', cuatrimestre:4, creditos:8, horas:128, correlativas:['CBC']},
+  {id:'fisicaparticulas', nombre:'Física de los Sistemas de Partículas', cuatrimestre:4, creditos:6, horas:96, correlativas:['CBC']},
+  {id:'quimicainorg', nombre:'Química Inorgánica', cuatrimestre:4, creditos:6, horas:96, correlativas:['quimicagen']},
+  {id:'fundprocesos', nombre:'Fundamentos de Procesos Químicos', cuatrimestre:4, creditos:4, horas:64, correlativas:['introquimica','quimicagen']},
+
+  {id:'electromagnetismo', nombre:'Electricidad y Magnetismo', cuatrimestre:5, creditos:6, horas:96, correlativas:['fisicaparticulas','analisis2']},
+  {id:'optica', nombre:'Óptica', cuatrimestre:5, creditos:2, horas:32, correlativas:['CBC']},
+  {id:'modelacionnum', nombre:'Modelación Numérica', cuatrimestre:5, creditos:4, horas:64, correlativas:['analisis2','algebralineal']},
+  {id:'termoprocesos', nombre:'Termodinámica de los Procesos', cuatrimestre:5, creditos:8, horas:128, correlativas:['analisis2','fundprocesos']},
+
+  {id:'quimorganica', nombre:'Química Orgánica', cuatrimestre:6, creditos:8, horas:128, correlativas:['quimicainorg']},
+  {id:'probyestad', nombre:'Probabilidad y Estadística', cuatrimestre:6, creditos:6, horas:96, correlativas:['analisis2','algebralineal']},
+  {id:'fenomenostransp', nombre:'Fenómenos de Transporte', cuatrimestre:6, creditos:8, horas:128, correlativas:['termoprocesos']},
+
+  {id:'oucantmov', nombre:'Operaciones Unitarias de Transferencia de Cantidad de Movimiento y Energía', cuatrimestre:7, creditos:8, horas:128, correlativas:['modelacionnum','fenomenostransp']},
+  {id:'quimicafisica', nombre:'Química Física', cuatrimestre:7, creditos:6, horas:96, correlativas:['termoprocesos','electromagnetismo']},
+  {id:'ciendatos', nombre:'Introducción a la Ciencia de Datos', cuatrimestre:7, creditos:3, horas:48, correlativas:['algebralineal']},
+  {id:'quimanalitica', nombre:'Química Analítica Instrumental', cuatrimestre:7, creditos:4, horas:64, correlativas:['optica','quimorganica','probyestad']},
+
+  {id:'labopyproc', nombre:'Laboratorio de Operaciones y Procesos', cuatrimestre:8, creditos:4, horas:64, correlativas:['oucantmov']},
+  {id:'outransfmateria', nombre:'Operaciones Unitarias de Transferencia de Materia', cuatrimestre:8, creditos:8, horas:128, correlativas:['fenomenostransp']},
+  {id:'instplantas', nombre:'Instalaciones de Plantas de Procesos', cuatrimestre:8, creditos:6, horas:96, correlativas:['oucantmov']},
+
+  {id:'disenoreactores', nombre:'Diseño de Reactores', cuatrimestre:9, creditos:8, horas:128, correlativas:['modelacionnum','quimicafisica']},
+  {id:'dinamcontrol', nombre:'Dinámica y Control de Procesos', cuatrimestre:9, creditos:8, horas:128, correlativas:['oucantmov','outransfmateria']},
+  {id:'evalproyectos', nombre:'Evaluación de Proyectos de Plantas Químicas', cuatrimestre:9, creditos:6, horas:96, correlativas:[{creditos:120}]},
+
+  {id:'ingbioprocesos', nombre:'Ingeniería de Bioprocesos', cuatrimestre:10, creditos:6, horas:96, correlativas:['disenoreactores','quimorganica']},
+  {id:'disenoprocesos', nombre:'Diseño de Procesos', cuatrimestre:10, creditos:6, horas:96, correlativas:['outransfmateria']},
+  {id:'tif1', nombre:'Trabajo Profesional o Tesis de Ing. Química (parte 1)', cuatrimestre:10, creditos:6, horas:96, correlativas:['labopyproc','evalproyectos','dinamcontrol']},
+
+  {id:'tif2', nombre:'Trabajo Profesional o Tesis de Ing. Química (parte 2)', cuatrimestre:11, creditos:6, horas:96, correlativas:['tif1']},
+  {id:'emisiones', nombre:'Emisiones de Contaminantes Químicos y Biológicos', cuatrimestre:11, creditos:6, horas:96, correlativas:['outransfmateria']},
+  {id:'legislacion', nombre:'Legislación y Ejercicio Profesional', cuatrimestre:11, creditos:2, horas:32, correlativas:[{creditos:100}]},
+];
+const MATERIAS_ELECTIVAS=[
+  {id:'e-mitigacionc', nombre:'Tecnologías para la Mitigación de Emisiones de Carbono', creditos:4, horas:64, correlativas:[{creditos:140}]},
+  {id:'e-integracionenerg', nombre:'Integración y Eficiencia Energética de Procesos', creditos:6, horas:96, correlativas:['oucantmov']},
+  {id:'e-hidrogeno', nombre:'Hidrógeno como Vector Energético y Aplicaciones Industriales', creditos:4, horas:64, correlativas:['fenomenostransp','quimicafisica']},
+  {id:'e-biopolimeros', nombre:'Biopolímeros', creditos:4, horas:64, correlativas:['fenomenostransp']},
+  {id:'e-disenoreactoresav', nombre:'Diseño Avanzado de Reactores Químicos', creditos:6, horas:96, correlativas:['disenoreactores']},
+  {id:'e-bioprocesosind', nombre:'Bioprocesos Industriales', creditos:4, horas:64, correlativas:['ingbioprocesos']},
+  {id:'e-microbioind', nombre:'Microbiología Industrial', creditos:4, horas:64, correlativas:['quimorganica','ingbioprocesos']},
+  {id:'e-planifinteractiva', nombre:'Introducción a la Planificación Interactiva', creditos:4, horas:64, correlativas:[{creditos:120}]},
+  {id:'e-gestrecursos', nombre:'Gestión de Recursos', creditos:4, horas:64, correlativas:['evalproyectos']},
+  {id:'e-controlestad', nombre:'Control Estadístico de Procesos', creditos:6, horas:96, correlativas:['probyestad']},
+  {id:'e-seissigma', nombre:'Seis Sigma y Diseño de Experimentos', creditos:6, horas:96, correlativas:['probyestad']},
+  {id:'e-transicionenerg', nombre:'Introducción a la Transición Energética', creditos:4, horas:64, correlativas:[{creditos:120}]},
+  {id:'e-energiasrenov', nombre:'Energías Renovables', creditos:4, horas:64, correlativas:[{creditos:120}]},
+  {id:'e-usoeficiente', nombre:'Uso Eficiente de la Energía', creditos:4, horas:64, correlativas:[{creditos:120}]},
+  {id:'e-fuentesconv', nombre:'Fuentes Convencionales en la Transición Energética', creditos:4, horas:64, correlativas:[{creditos:120}]},
+  {id:'e-tecemergentes', nombre:'Tecnologías Emergentes en la Transición Energética', creditos:4, horas:64, correlativas:[{creditos:120}]},
+  {id:'e-termodinestad', nombre:'Termodinámica Estadística', creditos:6, horas:96, correlativas:['quimicafisica']},
+  {id:'e-termodinnoeq', nombre:'Termodinámica de No-Equilibrio', creditos:4, horas:64, correlativas:['fenomenostransp','quimicafisica']},
+  {id:'e-electroquimica', nombre:'Electroquímica', creditos:6, horas:96, correlativas:['fenomenostransp','quimicafisica']},
+];
+const TODAS_MATERIAS=[...MATERIAS_CBC, ...MATERIAS_OBLIGATORIAS, ...MATERIAS_ELECTIVAS];
+const TOTAL_CREDITOS_CARRERA=231;
+
+function estadoMateria(id){ return (DB.materias&&DB.materias[id])||'pendiente'; }
+function estaAprobada(id){ return estadoMateria(id)==='aprobada'; }
+function creditosAprobados(){
+  return TODAS_MATERIAS.filter(m=>estaAprobada(m.id)).reduce((s,m)=>s+(m.creditos||0),0);
+}
+function nombrePorId(id){ const m=TODAS_MATERIAS.find(x=>x.id===id); return m?m.nombre:id; }
+function correlativasCumplidas(materia){
+  return (materia.correlativas||[]).every(c=>{
+    if(c==='CBC') return MATERIAS_CBC.every(m=>estaAprobada(m.id));
+    if(typeof c==='object'&&c.creditos!=null) return creditosAprobados()>=c.creditos;
+    return estaAprobada(c);
+  });
+}
+function nombresDeCorrelativas(materia){
+  return (materia.correlativas||[]).map(c=>{
+    if(c==='CBC') return 'CBC completo';
+    if(typeof c==='object'&&c.creditos!=null) return c.creditos+' créditos acumulados';
+    return nombrePorId(c);
+  });
+}
+function iconoEstado(estado){
+  if(estado==='aprobada') return '✅';
+  if(estado==='cursando') return '🟡';
+  return '⬜';
+}
+
 function renderHome(){
   const nombre=(DB.perfil&&DB.perfil.nombre)||'';
   document.getElementById('home-sub').textContent=nombre?('Hola, '+nombre):'Hola';
+
+  const creditos=creditosAprobados();
+  const pct=Math.round(creditos/TOTAL_CREDITOS_CARRERA*100);
+  document.getElementById('home-progreso').textContent=pct+'%';
+  document.getElementById('home-progreso-sub').textContent=creditos+' / '+TOTAL_CREDITOS_CARRERA+' créditos';
+  document.getElementById('home-progreso-bar').style.width=Math.min(100,pct)+'%';
+
+  const aprobadas=TODAS_MATERIAS.filter(m=>estaAprobada(m.id)).length;
+  const cursando=TODAS_MATERIAS.filter(m=>estadoMateria(m.id)==='cursando').length;
+  const notas=Object.values(DB.notas||{});
+  const promedio=notas.length?(notas.reduce((s,n)=>s+n,0)/notas.length).toFixed(2):'—';
+
+  document.getElementById('home-kpis').innerHTML=[
+    ['✅',aprobadas,'Materias aprobadas'],
+    ['🟡',cursando,'Cursando'],
+    ['📊',promedio,'Promedio'],
+    ['🎓',TODAS_MATERIAS.length-aprobadas-cursando,'Pendientes'],
+  ].map(([icon,val,lbl])=>
+    '<div class="kpi-box"><div class="kpi-val">'+icon+' '+val+'</div><div class="kpi-lbl">'+lbl+'</div></div>'
+  ).join('');
+
+  const habilitadas=TODAS_MATERIAS.filter(m=>m.ciclo!=='cbc'&&estadoMateria(m.id)==='pendiente'&&correlativasCumplidas(m)).slice(0,5);
+  document.getElementById('home-habilitadas').innerHTML=habilitadas.length?habilitadas.map(m=>
+    '<div class="row-item" onclick="abrirModalMateria(\''+m.id+'\')">'+
+      '<div class="row-icon" style="background:rgba(20,184,166,.15)">📘</div>'+
+      '<div class="row-main"><div class="row-title">'+esc(m.nombre)+'</div><div class="row-sub">'+(m.creditos||0)+' créditos</div></div>'+
+    '</div>'
+  ).join(''):'<div class="empty"><div class="empty-icon">📘</div><div class="empty-text">Sin materias nuevas habilitadas</div><div class="empty-sub">Marcá el CBC como aprobado para empezar</div></div>';
+
+  const proximosExamenes=(DB.examenes||[]).filter(ex=>!ex.rendido&&ex.fecha).sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(0,3);
+  document.getElementById('home-examenes').innerHTML=proximosExamenes.length?proximosExamenes.map(ex=>
+    '<div class="row-item static">'+
+      '<div class="row-icon" style="background:rgba(245,158,11,.15)">📅</div>'+
+      '<div class="row-main"><div class="row-title">'+esc(nombrePorId(ex.materiaId))+'</div><div class="row-sub">'+(ex.tipo||'Examen')+' · '+fmtFecha(ex.fecha)+'</div></div>'+
+    '</div>'
+  ).join(''):'<div style="text-align:center;color:var(--text3);font-size:12px;padding:10px 0">Sin parciales/finales cargados — andá a Más → Calendario</div>';
 }
-function renderMaterias(){}
+
+function renderMaterias(){
+  const el=document.getElementById('materias-lista');
+  const grupos=[['cbc','Ciclo Básico Común', MATERIAS_CBC]];
+  for(let c=3;c<=11;c++){
+    grupos.push(['cuatri'+c, c+'° Cuatrimestre', MATERIAS_OBLIGATORIAS.filter(m=>m.cuatrimestre===c)]);
+  }
+  grupos.push(['electivas','Materias Electivas (elegís entre estas)', MATERIAS_ELECTIVAS]);
+
+  el.innerHTML=grupos.map(([key,label,materias])=>{
+    if(!materias.length) return '';
+    return '<div class="section-title" style="margin-top:14px">'+esc(label)+'</div>'+
+      materias.map(m=>{
+        const estado=estadoMateria(m.id);
+        const cumplidas=m.ciclo==='cbc'?true:correlativasCumplidas(m);
+        const bloqueada=estado==='pendiente'&&!cumplidas;
+        return '<div class="row-item'+(bloqueada?' locked':'')+'" onclick="abrirModalMateria(\''+m.id+'\')">'+
+          '<div class="row-icon" style="background:rgba(20,184,166,.15)">'+iconoEstado(estado)+'</div>'+
+          '<div class="row-main"><div class="row-title">'+esc(m.nombre)+'</div><div class="row-sub">'+(m.creditos||0)+' créditos'+(bloqueada?' · bloqueada por correlativas':'')+'</div></div>'+
+        '</div>';
+      }).join('');
+  }).join('');
+}
+
+let _estadoMateriaSel='pendiente';
+function abrirModalMateria(id){
+  const m=TODAS_MATERIAS.find(x=>x.id===id);
+  if(!m) return;
+  document.getElementById('mm-id').value=id;
+  document.getElementById('modal-materia-titulo').textContent=m.nombre;
+  _estadoMateriaSel=estadoMateria(id);
+  const cumplidas=m.ciclo==='cbc'?true:correlativasCumplidas(m);
+  const nombresCorr=m.ciclo==='cbc'?[]:nombresDeCorrelativas(m);
+  document.getElementById('modal-materia-info').innerHTML=
+    '<div>'+(m.creditos||0)+' créditos · '+(m.horas||0)+' horas</div>'+
+    (nombresCorr.length?'<div style="margin-top:4px">Correlativas: '+nombresCorr.map(esc).join(', ')+'</div>':'')+
+    (!cumplidas?'<div style="margin-top:6px;color:var(--red)">⚠️ Todavía no cumplís las correlativas para cursar esta materia</div>':'');
+  renderEstadoPills();
+  document.getElementById('mm-nota').value=(DB.notas&&DB.notas[id])||'';
+  actualizarNotaWrap();
+  abrirModal('materia');
+}
+function setEstadoMateria(e){ _estadoMateriaSel=e; renderEstadoPills(); actualizarNotaWrap(); }
+function renderEstadoPills(){
+  const estados=[['pendiente','⬜ Pendiente'],['cursando','🟡 Cursando'],['aprobada','✅ Aprobada']];
+  document.getElementById('mm-estado-pills').innerHTML=estados.map(([id,label])=>
+    '<button type="button" class="pill '+(id===_estadoMateriaSel?'sel':'')+'" onclick="setEstadoMateria(\''+id+'\')">'+label+'</button>'
+  ).join('');
+}
+function actualizarNotaWrap(){
+  document.getElementById('mm-nota-wrap').style.display=_estadoMateriaSel==='aprobada'?'block':'none';
+}
+async function guardarEstadoMateria(){
+  const id=document.getElementById('mm-id').value;
+  if(!DB.materias) DB.materias={};
+  if(!DB.notas) DB.notas={};
+  DB.materias[id]=_estadoMateriaSel;
+  if(_estadoMateriaSel==='aprobada'){
+    const nota=parseFloat(document.getElementById('mm-nota').value);
+    if(nota) DB.notas[id]=nota; else delete DB.notas[id];
+  } else {
+    delete DB.notas[id];
+  }
+  await save();
+  cerrarModal('materia');
+  renderMaterias();
+  if(_pagActual==='home') renderHome();
+  toast('✅ Guardado');
+}
+
 function renderCalculadoras(){}
 function renderFichas(){}
 function renderCalendario(){}
