@@ -1592,7 +1592,13 @@ const APUNTES=[
          '• <b>Sistema abierto</b> (volumen de control): hay transferencia de masa Y energía — es el caso más común en ingeniería química (reactores, columnas de destilación, intercambiadores, bombas).<br>'+
          '• <b>Sistema aislado</b>: no hay transferencia de masa ni de energía con el entorno.<br><br>'+
          'Las <b>propiedades de estado</b> (P, T, V, U, H, S) dependen solo del estado actual del sistema, no de cómo se llegó a él (son funciones de punto). En cambio Q y W son <b>funciones de trayectoria</b>: dependen del camino recorrido entre dos estados, no solo de los estados inicial y final.<br><br>'+
-         'Un proceso es <b>cuasiestático</b> (o de cuasi-equilibrio) cuando ocurre tan lentamente que el sistema pasa por una sucesión de estados de equilibrio — es la idealización que permite calcular trabajo como ∫P·dV.'},
+         'Un proceso es <b>cuasiestático</b> (o de cuasi-equilibrio) cuando ocurre tan lentamente que el sistema pasa por una sucesión de estados de equilibrio — es la idealización que permite calcular trabajo como ∫P·dV.'+
+         '<br><br><div style="background:rgba(245,158,11,.1);border:1px solid var(--gold);border-radius:10px;padding:10px 12px;margin-top:10px">'+
+         '<b style="color:var(--gold)">📋 Cómo se evalúa esta materia (según la planificación oficial de la cátedra 76.45):</b><br>'+
+         'El <b>Parcial 1</b> toma Balances de Masa y Energía, Balance de Entropía y Propiedades de Sustancias Reales (secciones 2 a 13 de este apunte).<br>'+
+         'El <b>Parcial 2</b> toma Fugacidad, Propiedades de Exceso y de Mezclado, y Equilibrio Líquido-Vapor (secciones 14 a 21).<br>'+
+         'Equilibrio Químico (sección 22) se ve al final del cuatrimestre. Además hay que aprobar un <b>Trabajo Práctico</b> obligatorio de cálculo de propiedades termodinámicas para un caso real.'+
+         '</div>'},
 
       {h:'2. Primera Ley — sistemas cerrados',
        p:'La energía no se crea ni se destruye, solo se transforma. Para un sistema cerrado entre dos estados:<br><br>'+
@@ -1657,8 +1663,125 @@ const APUNTES=[
          '• <b>Válvula de estrangulamiento</b> (Joule-Thomson): expansión brusca sin trabajo ni calor apreciables → proceso <b>isentálpico</b>: h_entrada ≈ h_salida. Muy usada en refrigeración para bajar la presión (y con ella, la temperatura) del refrigerante líquido.<br><br>'+
          '• <b>Cámara de mezcla</b>: se juntan dos corrientes en una sola — balance de materia y energía combinados, sin trabajo ni calor: ṁ₁h₁ + ṁ₂h₂ = ṁ₃h₃.'},
 
-      {h:'10. Ciclos termodinámicos de potencia',
-       p:'<b>Ciclo de Carnot</b>: el ciclo ideal de máxima eficiencia posible entre dos temperaturas, compuesto por 2 procesos isotérmicos y 2 adiabáticos reversibles:<br><br>'+
+      {h:'10. Propiedades P-v-T de fluidos puros: ecuaciones de estado y correlaciones generalizadas',
+       p:'El comportamiento de una sustancia pura se representa en un diagrama P-v-T (superficie tridimensional) o en sus proyecciones P-v, P-T, T-v, donde aparecen las regiones de líquido, vapor, la zona de coexistencia y el <b>punto crítico</b> (Tc, Pc, vc), más allá del cual no hay distinción entre líquido y vapor.<br><br>'+
+         '<b>Ecuación Virial</b>: la forma más rigurosa de corregir el gas ideal a presiones moderadas, como una serie en 1/v:<br>'+
+         '<div style="text-align:center;font-size:14px;font-weight:800;color:var(--accent);margin:8px 0">Z = Pv/RT = 1 + B/v + C/v² + ... ≈ 1 + BP/RT</div>'+
+         'donde B es el <b>segundo coeficiente virial</b> (depende solo de T para cada sustancia). La forma truncada a 2 términos (válida hasta presiones moderadas, ~15 bar) es la que más se usa en esta materia.<br><br>'+
+         '<b>Ecuaciones cúbicas de estado</b>: válidas en un rango más amplio de P y T, incluyendo la zona de líquido. Todas corrigen Van der Waals con un término de atracción que depende de T:<br>'+
+         '• <b>Van der Waals</b>: (P + a/v²)(v − b) = RT — la más simple, histórica.<br>'+
+         '• <b>Redlich-Kwong (RK)</b>: P = RT/(v−b) − a/[√T·v(v+b)]<br>'+
+         '• <b>Soave-Redlich-Kwong (SRK)</b> y <b>Peng-Robinson (PR)</b>: mejoran RK incorporando el <b>factor acéntrico ω</b> en el término a(T) — mucha mejor precisión para presión de vapor y equilibrio líquido-vapor. Son las que usan los simuladores de proceso industriales (Aspen, HYSYS).<br><br>'+
+         '<b>Principio de estados correspondientes</b>: sustancias distintas evaluadas a la misma temperatura y presión reducidas (Tr=T/Tc, Pr=P/Pc) tienen aproximadamente el mismo factor de compresibilidad Z. La versión de 3 parámetros agrega el <b>factor acéntrico ω</b> (mide cuánto se aparta la molécula de una esfera simple; ω=0 para gases nobles):<br>'+
+         '<div style="text-align:center;font-size:14px;font-weight:800;color:var(--gold);margin:8px 0">Z = Z⁰(Tr,Pr) + ω·Z¹(Tr,Pr)</div>'+
+         'Z⁰ y Z¹ se obtienen de <b>correlaciones generalizadas de Pitzer</b> (tablas o cartas de Lee-Kesler): es el método estándar para estimar propiedades de un fluido puro con solo conocer Tc, Pc y ω, sin tener una ecuación de estado ajustada.'},
+
+      {h:'11. Propiedades residuales',
+       p:'Una <b>propiedad residual</b> M^R mide cuánto se aparta una propiedad real de lo que valdría un gas ideal en las mismas condiciones de T y P:<br>'+
+         '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--accent);margin:8px 0">M^R ≡ M − M^(ig)</div>'+
+         'Es la herramienta central para calcular ΔH y ΔS de un gas real usando un camino en tres tramos (como U, H y S son funciones de estado, el camino elegido no importa):<br>'+
+         '1) Del estado real 1 al gas ideal, a las mismas T₁,P₁ (restando H^R₁, S^R₁).<br>'+
+         '2) Cambio de estado como gas ideal, de (T₁,P₁) a (T₂,P₂) — se calcula fácil con cp de gas ideal.<br>'+
+         '3) Del gas ideal al estado real 2, a T₂,P₂ (sumando H^R₂, S^R₂).<br><br>'+
+         'La energía de Gibbs residual se relaciona directamente con Z, por eso es tan práctico calcularla a partir de una ecuación de estado:<br>'+
+         '<div style="text-align:center;font-size:14px;font-weight:800;color:var(--gold);margin:8px 0">G^R/RT = ∫₀^P (Z−1) dP/P &nbsp; (a T constante)</div>'+
+         'Con la virial truncada (Z=1+BP/RT) esto da una fórmula cerrada simple: <b>G^R/RT = BP/RT</b>, y como ln φ = G^R/RT, se llega directo al coeficiente de fugacidad (próxima sección). Cuando no hay una ecuación de estado ajustada, H^R y S^R se leen de las <b>correlaciones generalizadas de Lee-Kesler</b> (tablas de H^R/RTc y S^R/R en función de Tr, Pr y ω) — tablas de uso muy frecuente en los parciales de esta materia.'},
+
+      {h:'12. Relaciones termodinámicas y exergía',
+       p:'<b>Relaciones de Maxwell</b>: se derivan de las 4 ecuaciones fundamentales (dU, dH, dA=energía libre de Helmholtz, dG=energía libre de Gibbs) e igualando derivadas cruzadas. Permiten calcular propiedades difíciles de medir (como S) a partir de propiedades P-V-T que sí se miden fácilmente. No hace falta memorizarlas todas, pero conviene reconocerlas si aparecen en el final.<br><br>'+
+         '<b>Exergía (disponibilidad)</b>: es el trabajo máximo teórico que se puede obtener de un sistema al llevarlo al equilibrio con el ambiente de referencia (T₀, P₀). Se relaciona con la <b>irreversibilidad</b> I = T₀·S_gen (la exergía que se "destruye" por generar entropía). Es la base del análisis de segunda ley aplicado a procesos reales, para identificar dónde se pierde más potencial de trabajo en una planta.'},
+
+      {h:'13. Diagramas termodinámicos',
+       p:'<b>Diagrama P-V</b>: el área bajo la curva de un proceso es el trabajo (∫P·dV). Útil para visualizar ciclos y comparar trabajo neto. Tiene el "domo" de saturación donde coexisten líquido y vapor.<br><br>'+
+         '<b>Diagrama T-S</b>: el área bajo la curva de un proceso reversible es el calor (∫T·dS). Muy usado para analizar ciclos de potencia (Rankine, Brayton) porque el área del ciclo completo es el trabajo neto.<br><br>'+
+         '<b>Diagrama de Mollier (H-S)</b>: usado sobre todo con vapor de agua, permite leer directamente la entalpía tras una expansión o compresión isentrópica (útil para turbinas) — una isentrópica es una recta vertical en este diagrama.<br><br>'+
+         '<b>Diagrama P-H</b>: el más usado en refrigeración, porque el ciclo de compresión de vapor se ve como un rectángulo aproximado y facilita leer directamente los calores y trabajos (todos son diferencias de h).'},
+
+      {h:'14. Propiedades molares parciales y ecuación de Gibbs-Dühem',
+       p:'Cuando se trabaja con mezclas, cada propiedad extensiva (V, U, H, S, G) de la solución depende de cuánto hay de cada componente. La <b>propiedad molar parcial</b> del componente i mide cómo cambia una propiedad total de la mezcla al agregar una cantidad infinitesimal de i, manteniendo T, P y los demás moles constantes:<br>'+
+         '<div style="text-align:center;font-size:15px;font-weight:800;color:var(--accent);margin:8px 0">M̄ᵢ ≡ (∂(nM)/∂nᵢ) a T,P,nⱼ constantes</div>'+
+         'Para un sistema binario existe un método muy usado (<b>tangente-intercepto</b>): si M es la propiedad molar de la mezcla en función de x1,<br>'+
+         '<div style="text-align:center;font-size:14px;font-weight:800;color:var(--gold);margin:8px 0">M̄₁ = M + x₂·(dM/dx₁) &nbsp;&nbsp; M̄₂ = M − x₁·(dM/dx₁)</div>'+
+         'Se traza la recta tangente a la curva M(x1) en el punto de composición de interés, y las ordenadas al origen en x1=1 y x1=0 son M̄₁ y M̄₂ respectivamente.<br><br>'+
+         'La <b>ecuación de Gibbs-Dühem</b> es una restricción termodinámica que deben cumplir simultáneamente las propiedades molares parciales de todos los componentes (a T y P constantes):<br>'+
+         '<div style="text-align:center;font-size:15px;font-weight:800;color:var(--accent);margin:8px 0">Σ xᵢ·dM̄ᵢ = 0</div>'+
+         'Es decir, las propiedades molares parciales de los distintos componentes NO son independientes entre sí. Es la base del "test de consistencia termodinámica" que se aplica a datos experimentales de equilibrio de fases.'},
+
+      {h:'15. Fugacidad y coeficiente de fugacidad',
+       p:'La <b>fugacidad</b> fᵢ es una "presión corregida" que permite que las ecuaciones de equilibrio de fases y equilibrio químico tengan la misma forma simple que para gas ideal, aun con comportamiento real. Se define a partir de la energía de Gibbs:<br>'+
+         '<div style="text-align:center;font-size:14px;font-weight:800;color:var(--accent);margin:8px 0">Gᵢ − Γᵢ(T) = RT·ln fᵢ</div>'+
+         'con la condición de que, a P→0, toda sustancia se comporta como gas ideal y fᵢ→P. El <b>coeficiente de fugacidad</b> φᵢ mide qué tan lejos está la sustancia real del gas ideal a esa misma P:<br>'+
+         '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--gold);margin:8px 0">φᵢ = fᵢ/P &nbsp;&nbsp; (φ=1 para gas ideal)</div>'+
+         'Se relaciona directamente con la energía de Gibbs residual: <b>ln φ = G^R/RT</b>. Con la ecuación virial truncada esto da la fórmula más usada en la práctica de esta materia:<br>'+
+         '<div style="text-align:center;font-size:15px;font-weight:800;color:var(--gold);margin:8px 0">ln φ = BP/RT</div>'+
+         'Para una <b>mezcla</b>, se define la fugacidad parcial f̂ᵢ de cada componente en la solución, y el coeficiente de fugacidad parcial φ̂ᵢ=f̂ᵢ/(yᵢP) — son los que aparecen en el criterio de equilibrio entre fases: la fugacidad de cada componente debe ser igual en todas las fases presentes, f̂ᵢ^líq = f̂ᵢ^vap.'},
+
+      {h:'16. Soluciones ideales y Ley de Lewis-Randall',
+       p:'Una <b>solución ideal</b> es la idealización de referencia para mezclas líquidas o gaseosas, análoga al gas ideal para sustancias puras. Se define por la <b>Ley de Lewis-Randall</b>: la fugacidad parcial de cada componente es proporcional a su fracción molar y a la fugacidad de la sustancia pura, a la misma T y P:<br>'+
+         '<div style="text-align:center;font-size:15px;font-weight:800;color:var(--accent);margin:8px 0">f̂ᵢ^(id) = xᵢ·fᵢ &nbsp; (fᵢ = fugacidad del componente puro a T,P de la mezcla)</div>'+
+         'Consecuencias de la idealidad para las propiedades de mezclado, a T y P constantes, mezclando desde los componentes puros:<br>'+
+         '<div style="text-align:center;font-size:14px;font-weight:800;color:var(--gold);margin:8px 0">ΔV_mezcla=0 &nbsp; ΔH_mezcla=0 &nbsp; ΔG_mezcla=RT·Σxᵢln xᵢ &nbsp; ΔS_mezcla=−R·Σxᵢln xᵢ</div>'+
+         'Como xᵢ&lt;1, ln xᵢ&lt;0, entonces ΔS_mezcla siempre es positivo: mezclar siempre aumenta la entropía, incluso en el caso ideal — es un efecto puramente combinatorio, no energético.'},
+
+      {h:'17. Propiedades de exceso y coeficientes de actividad',
+       p:'Como ninguna solución real es exactamente ideal, se define la <b>propiedad de exceso</b> M^E como la diferencia entre el valor real y el que tendría una solución ideal a la misma T, P y composición:<br>'+
+         '<div style="text-align:center;font-size:15px;font-weight:800;color:var(--accent);margin:8px 0">M^E ≡ M − M^(id)</div>'+
+         'El <b>coeficiente de actividad</b> γᵢ cumple para soluciones reales el mismo rol que φ para gases reales — mide cuánto se aparta el componente i de la Ley de Lewis-Randall:<br>'+
+         '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--gold);margin:8px 0">γᵢ = f̂ᵢ / (xᵢ·fᵢ) &nbsp; (γ=1 para solución ideal)</div>'+
+         'Se relaciona con la energía de Gibbs de exceso: <b>G^E/RT = Σ xᵢ·ln γᵢ</b>. Por Gibbs-Dühem, los γᵢ de los distintos componentes tampoco son independientes: Σxᵢ·d(ln γᵢ)=0 a T,P ctes — esto permite, conociendo γ1 en función de la composición, calcular γ2 sin medirlo por separado.<br><br>'+
+         'Modelos empíricos comunes para G^E (y de ahí γ1, γ2): <b>Margules de un parámetro</b> (el más simple, G^E=A·x1x2) y <b>Van Laar</b> (más flexible, mejor para sistemas muy no ideales). Ambos se ajustan con datos experimentales de equilibrio líquido-vapor.'},
+
+      {h:'18. Equilibrio líquido-vapor: modelos simples (Raoult y Henry)',
+       p:'El criterio general de equilibrio entre fases es la igualdad de fugacidades parciales de cada componente en ambas fases: f̂ᵢ^L = f̂ᵢ^V. Para sistemas simples a baja/moderada presión, esto se reduce a dos leyes clásicas:<br><br>'+
+         '<b>Ley de Raoult</b> (solución líquida ideal + vapor gas ideal, válida para componentes químicamente similares, ej. mezclas de hidrocarburos de la misma familia):<br>'+
+         '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--accent);margin:8px 0">yᵢ·P = xᵢ·Pᵢ^sat</div>'+
+         'donde Pᵢ^sat es la presión de vapor del componente puro i a la temperatura del sistema (ecuación de Antoine o tablas).<br><br>'+
+         '<b>Ley de Henry</b> (para un soluto i muy diluido en un solvente, xᵢ→0, típico de gases disueltos en líquidos, ej. O2 o CO2 en agua):<br>'+
+         '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--accent);margin:8px 0">yᵢ·P = xᵢ·Hᵢ</div>'+
+         'donde Hᵢ es la <b>constante de Henry</b> del soluto en ese solvente a esa T (dato experimental tabulado, distinto de Pᵢ^sat).<br><br>'+
+         'En ambos casos se define la <b>constante de equilibrio</b> Kᵢ=yᵢ/xᵢ (Raoult: Kᵢ=Pᵢ^sat/P; Henry: Kᵢ=Hᵢ/P), muy usada en cálculos rápidos de destilación con los <b>nomogramas de DePriester</b> para mezclas de hidrocarburos ligeros.'},
+
+      {h:'19. Equilibrio líquido-vapor no ideal: formulaciones γ-φ y φ-φ. Puntos de burbuja y de rocío',
+       p:'Cuando las fases no se comportan idealmente se usan dos formulaciones generales, según f̂ᵢ^L=f̂ᵢ^V:<br><br>'+
+         '<b>Formulación γ-φ</b> (la más usada a baja/moderada presión — líquido no ideal, vapor gas ideal o casi):<br>'+
+         '<div style="text-align:center;font-size:15px;font-weight:800;color:var(--accent);margin:8px 0">yᵢ·φ̂ᵢ·P = xᵢ·γᵢ·Pᵢ^sat</div>'+
+         'Si el vapor se aproxima a gas ideal (φ̂ᵢ≈1) esto se simplifica a la <b>Ley de Raoult modificada</b>: yᵢP = xᵢγᵢPᵢ^sat — la ecuación de trabajo estándar de esta materia para equilibrio líquido-vapor no ideal a baja presión.<br><br>'+
+         '<b>Formulación φ-φ</b> (para alta presión, donde ambas fases se apartan mucho de la idealidad): se usa una única ecuación de estado, tipo Peng-Robinson, para calcular φ̂ᵢ en ambas fases, líquida y vapor.<br><br>'+
+         '<b>Punto de burbuja</b> (BUBL): dado el líquido (xᵢ conocidos) a T o P dada, se busca la P (o T) y las yᵢ en que aparece la primera burbuja de vapor, resolviendo Σyᵢ=Σxᵢγᵢ(Pᵢ^sat/P)=1.<br>'+
+         '<b>Punto de rocío</b> (DEW): dado el vapor (yᵢ conocidos), se busca la P (o T) y las xᵢ en que aparece la primera gota de líquido, resolviendo Σxᵢ=Σ[yᵢP/(γᵢPᵢ^sat)]=1 (iterativo, porque γᵢ depende de xᵢ, que es la incógnita).'},
+
+      {h:'20. Operación flash',
+       p:'La operación <b>flash</b> (destilación instantánea) separa una corriente de alimentación en una fase líquida y una vapor en equilibrio, típicamente al bajar la presión bruscamente en una válvula seguida de un separador. Es una de las operaciones unitarias más frecuentes en plantas de proceso.<br><br>'+
+         'Balance de materia global y por componente (F=alimentación, L=líquido, V=vapor, zᵢ=composición de la alimentación):<br>'+
+         '<div style="text-align:center;font-size:14px;font-weight:800;color:var(--accent);margin:8px 0">F=L+V &nbsp;&nbsp; F·zᵢ=L·xᵢ+V·yᵢ</div>'+
+         'Combinando con yᵢ=Kᵢxᵢ y definiendo ψ=V/F, se llega a la <b>ecuación de Rachford-Rice</b>, que se resuelve iterativamente (zᵢ y Kᵢ son datos, ψ es la única incógnita):<br>'+
+         '<div style="text-align:center;font-size:15px;font-weight:800;color:var(--gold);margin:8px 0">Σᵢ [zᵢ(Kᵢ−1)] / [1+ψ(Kᵢ−1)] = 0</div>'+
+         'Una vez hallado ψ: xᵢ=zᵢ/[1+ψ(Kᵢ−1)] y yᵢ=Kᵢ·xᵢ. Para que exista una solución física (0&lt;ψ&lt;1, ambas fases presentes) tiene que haber al menos un componente con Kᵢ&gt;1 y al menos uno con Kᵢ&lt;1.'},
+
+      {h:'21. Diagramas binarios: azeótropos, hetero-azeótropos y eutécticos',
+       p:'Los <b>diagramas T-x-y</b> (a P constante) y <b>P-x-y</b> (a T constante) resumen el equilibrio líquido-vapor de un sistema binario en todo el rango de composiciones. En un sistema ideal (Raoult), la curva de burbuja y la de rocío nunca se cruzan.<br><br>'+
+         'En sistemas <b>no ideales</b> puede aparecer un <b>azeótropo</b>: una composición donde la curva de líquido y la de vapor se tocan (x=y), y la mezcla hierve como si fuera una sustancia pura — no se puede separar por destilación simple más allá de esa composición. Se clasifican en:<br>'+
+         '• <b>Azeótropo de mínimo punto de ebullición</b> (el más común, desviaciones positivas de Raoult, γ&gt;1, ej. etanol-agua)<br>'+
+         '• <b>Azeótropo de máximo punto de ebullición</b> (desviaciones negativas, γ&lt;1, más raro, ej. acetona-cloroformo)<br><br>'+
+         '<b>Hetero-azeótropo</b>: aparece en sistemas parcialmente miscibles en fase líquida (dos líquidos que no se disuelven totalmente entre sí, ej. agua-éter); el diagrama muestra una región de coexistencia de dos líquidos además del equilibrio líquido-vapor.<br><br>'+
+         '<b>Eutéctico</b>: el análogo en equilibrio sólido-líquido — la composición de menor punto de fusión de una mezcla de dos sólidos, que se congela como si fuera una sustancia pura (se menciona aquí solo como concepto comparativo con el azeótropo).'},
+
+      {h:'22. Equilibrio Químico',
+       p:'Para una reacción química que alcanza el equilibrio a T y P dadas, el criterio termodinámico es que la energía de Gibbs total del sistema sea mínima, lo que se traduce en:<br>'+
+         '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--accent);margin:8px 0">ΔG°_rxn = −RT·ln K</div>'+
+         'donde ΔG°_rxn se calcula con las <b>energías de Gibbs de formación estándar</b> (ΔG°f, tabuladas a 25°C/1 atm) de productos y reactivos:<br>'+
+         '<div style="text-align:center;font-size:14px;font-weight:800;color:var(--gold);margin:8px 0">ΔG°_rxn = Σ νᵢ·ΔG°f,ᵢ (productos) − Σ νᵢ·ΔG°f,ᵢ (reactivos)</div>'+
+         'La <b>constante de equilibrio K</b> se relaciona con la composición real del sistema. Para reacciones en fase gaseosa con comportamiento ideal:<br>'+
+         '<div style="text-align:center;font-size:15px;font-weight:800;color:var(--accent);margin:8px 0">K = Π (yᵢ·P/P°)^νᵢ</div>'+
+         '(νᵢ positivo para productos, negativo para reactivos; P° es la presión de referencia, típicamente 1 atm o 1 bar).<br><br>'+
+         '<b>Efecto de la temperatura</b> — ecuación de Van’t Hoff, derivada de la relación de Gibbs-Helmholtz, describe cómo cambia K con T en función del calor de reacción ΔH°_rxn:<br>'+
+         '<div style="text-align:center;font-size:15px;font-weight:800;color:var(--gold);margin:8px 0">d(ln K)/dT = ΔH°_rxn / (RT²)</div>'+
+         'Si ΔH°_rxn es aprox. constante en el rango de T de interés, se integra directo: ln(K₂/K₁) = −(ΔH°_rxn/R)·(1/T₂ − 1/T₁). Reacciones <b>exotérmicas</b> (ΔH°&lt;0) tienen K que <b>disminuye</b> al aumentar T; reacciones <b>endotérmicas</b> tienen K que <b>aumenta</b> con T (Principio de Le Chatelier).<br><br>'+
+         '<b>Conversión de equilibrio</b>: conociendo K, se arma una tabla de moles iniciales/cambio/equilibrio en función del grado de avance de la reacción (xₑ), se reemplaza en la expresión de K, y se resuelve la ecuación algebraica resultante para xₑ — es el cálculo más frecuente en los ejercicios de examen de esta unidad.'},
+
+      {h:'23. Ciclos termodinámicos de potencia (contenido extra, no forma parte del programa oficial de esta cátedra)',
+       p:'Nota: este tema no figura en el programa analítico oficial de Termodinámica de los Procesos (76.45) — se incluye como contenido extra porque usa los mismos balances y conceptos de ciclos, y puede servir de repaso general o para materias posteriores.<br><br>'+
+         '<b>Ciclo de Carnot</b>: el ciclo ideal de máxima eficiencia posible entre dos temperaturas, compuesto por 2 procesos isotérmicos y 2 adiabáticos reversibles:<br><br>'+
          '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--accent);margin:8px 0">η_Carnot = 1 − Tf/Tc</div>'+
          'Ninguna máquina real puede superar esta eficiencia operando entre las mismas dos temperaturas (Tf y Tc en escala absoluta, Kelvin).<br><br>'+
          '<b>Ciclo de Rankine</b> (el más relevante en ingeniería química — plantas de vapor y cogeneración), 4 etapas en serie:<br>'+
@@ -1670,8 +1793,9 @@ const APUNTES=[
          'Mejoras típicas: <b>recalentamiento</b> (se vuelve a calentar el vapor entre etapas de turbina, sube la eficiencia y evita título muy bajo a la salida) y <b>regeneración</b> (se precalienta el agua de alimentación con vapor extraído de la turbina).<br><br>'+
          '<b>Ciclo Brayton</b> (turbinas a gas): compresión de aire, combustión a presión constante, expansión en turbina, escape — análogo al Rankine pero todo en fase gaseosa, sin condensador.'},
 
-      {h:'11. Ciclos de refrigeración',
-       p:'El <b>ciclo de compresión de vapor</b> es el más usado en refrigeración y aire acondicionado, 4 etapas:<br><br>'+
+      {h:'24. Ciclos de refrigeración (contenido extra, no forma parte del programa oficial de esta cátedra)',
+       p:'Nota: al igual que la sección anterior, este tema no figura en el programa oficial de esta cátedra — se incluye como contexto adicional.<br><br>'+
+         'El <b>ciclo de compresión de vapor</b> es el más usado en refrigeración y aire acondicionado, 4 etapas:<br><br>'+
          '1→2: Compresión del vapor (idealmente isentrópica, consume Wcomp)<br>'+
          '2→3: Condensación (isobárica, cede calor Qcondensador al ambiente)<br>'+
          '3→4: Expansión en válvula de estrangulamiento (isentálpica, h se mantiene, baja presión y temperatura)<br>'+
@@ -1679,23 +1803,6 @@ const APUNTES=[
          'Se evalúa con el <b>Coeficiente de Performance</b> (no es una eficiencia, puede ser mayor a 1):<br>'+
          '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--accent);margin:8px 0">COP = Qevaporador / Wcompresor</div>'+
          'Cuanto más alto el COP, menos trabajo hace falta para lograr el mismo efecto de enfriamiento — por eso se busca maximizarlo en el diseño.'},
-
-      {h:'12. Ecuaciones de estado',
-       p:'<b>Gas ideal</b>: PV = nRT — válida a bajas presiones y altas temperaturas (lejos de la condensación).<br><br>'+
-         '<b>Factor de compresibilidad Z</b>: PV = ZnRT, donde Z=1 para gas ideal. Se obtiene de cartas generalizadas (Standing-Katz) usando presión y temperatura reducidas: Pr=P/Pc, Tr=T/Tc (principio de estados correspondientes).<br><br>'+
-         '<b>Ecuación de Van der Waals</b> (corrige el gas ideal por volumen molecular y atracción entre moléculas):<br>'+
-         '<div style="text-align:center;font-size:13px;font-weight:800;color:var(--gold);margin:8px 0">(P + a/V²)(V − b) = RT</div>'+
-         'donde a y b son constantes específicas de cada sustancia (relacionadas con Pc y Tc). Existen ecuaciones más precisas (Redlich-Kwong, Peng-Robinson) que se ven en cursos posteriores.'},
-
-      {h:'13. Relaciones termodinámicas y exergía',
-       p:'<b>Relaciones de Maxwell</b>: se derivan de las 4 ecuaciones fundamentales (dU, dH, dA=energía libre de Helmholtz, dG=energía libre de Gibbs) e igualando derivadas cruzadas. Permiten calcular propiedades difíciles de medir (como S) a partir de propiedades P-V-T que sí se miden fácilmente. No hace falta memorizarlas todas, pero conviene reconocerlas si aparecen en el final.<br><br>'+
-         '<b>Exergía (disponibilidad)</b>: es el trabajo máximo teórico que se puede obtener de un sistema al llevarlo al equilibrio con el ambiente de referencia (T₀, P₀). Se relaciona con la <b>irreversibilidad</b> I = T₀·S_gen (la exergía que se "destruye" por generar entropía). Es la base del análisis de segunda ley aplicado a procesos reales, para identificar dónde se pierde más potencial de trabajo en una planta.'},
-
-      {h:'14. Diagramas termodinámicos',
-       p:'<b>Diagrama P-V</b>: el área bajo la curva de un proceso es el trabajo (∫P·dV). Útil para visualizar ciclos y comparar trabajo neto. Tiene el "domo" de saturación donde coexisten líquido y vapor.<br><br>'+
-         '<b>Diagrama T-S</b>: el área bajo la curva de un proceso reversible es el calor (∫T·dS). Muy usado para analizar ciclos de potencia (Rankine, Brayton) porque el área del ciclo completo es el trabajo neto.<br><br>'+
-         '<b>Diagrama de Mollier (H-S)</b>: usado sobre todo con vapor de agua, permite leer directamente la entalpía tras una expansión o compresión isentrópica (útil para turbinas) — una isentrópica es una recta vertical en este diagrama.<br><br>'+
-         '<b>Diagrama P-H</b>: el más usado en refrigeración, porque el ciclo de compresión de vapor se ve como un rectángulo aproximado y facilita leer directamente los calores y trabajos (todos son diferencias de h).'},
     ],
     ejercicios:[
       {enunciado:'2 moles de gas ideal se expanden isotérmicamente a 300 K desde 10 L hasta 30 L. Calcular el trabajo realizado por el gas.',
@@ -1744,6 +1851,46 @@ const APUNTES=[
        solucion:'W_neto = W_turbina − W_bomba = 800 − 10 = 790 kJ/kg<br>'+
          'η_térmica = W_neto / Q_caldera = 790 / 2500<br>'+
          '<b style="color:var(--accent)">W_neto = 790 kJ/kg · η ≈ 31.6%</b>'},
+      {enunciado:'Metano a 323.15 K (50°C) y 30 bar, con segundo coeficiente virial B=−133 cm³/mol. Calcular el factor de compresibilidad Z, el volumen molar v, el coeficiente de fugacidad φ y la fugacidad f.',
+       solucion:'Z = 1 + BP/RT = 1 + (−133×10⁻⁶ m³/mol)(30×10⁵ Pa)/(8.314×323.15)<br>'+
+         'BP/RT = (−133×10⁻⁶ × 3×10⁶)/2686.3 = −399/2686.3 = −0.1485<br>'+
+         '<b style="color:var(--accent)">Z ≈ 0.8515</b><br>'+
+         'v = ZRT/P = 0.8515×8.314×323.15/(3×10⁶) → <b style="color:var(--accent)">v ≈ 762.6 cm³/mol</b><br>'+
+         'ln φ = BP/RT = −0.1485 → <b style="color:var(--accent)">φ ≈ 0.862</b><br>'+
+         'f = φ·P = 0.862×30 → <b style="color:var(--accent)">f ≈ 25.9 bar</b>'},
+      {enunciado:'Para una mezcla binaria, el volumen molar en función de x1 es V = 80 + 40x1 − 10x1² (cm³/mol). Calcular los volúmenes molares parciales V̄1 y V̄2 a x1=0.4 por el método de la tangente-intercepto.',
+       solucion:'V(0.4) = 80 + 40(0.4) − 10(0.4)² = 80+16−1.6 = 94.4 cm³/mol<br>'+
+         'dV/dx1 = 40 − 20x1 = 40 − 8 = 32<br>'+
+         'V̄1 = V + x2·(dV/dx1) = 94.4 + 0.6×32 = <b style="color:var(--accent)">V̄1 ≈ 113.6 cm³/mol</b><br>'+
+         'V̄2 = V − x1·(dV/dx1) = 94.4 − 0.4×32 = <b style="color:var(--accent)">V̄2 ≈ 81.6 cm³/mol</b><br>'+
+         'Verificación: x1·V̄1 + x2·V̄2 = 0.4×113.6+0.6×81.6 = 94.4 = V ✓'},
+      {enunciado:'Mezcla líquida ideal de benceno(1) y tolueno(2), x1=0.4, a una temperatura donde Psat1=1360 mmHg y Psat2=543 mmHg. Calcular la presión total (punto de burbuja) y la composición del vapor por Ley de Raoult.',
+       solucion:'P = x1·Psat1 + x2·Psat2 = 0.4×1360 + 0.6×543 = 544+325.8<br>'+
+         '<b style="color:var(--accent)">P ≈ 869.8 mmHg</b><br>'+
+         'y1 = x1·Psat1/P = 544/869.8 → <b style="color:var(--accent)">y1 ≈ 0.625</b> (K1=y1/x1≈1.56, K2=y2/x2≈0.62)'},
+      {enunciado:'CO2 disuelto en agua a 25°C con constante de Henry H=1640 atm. Si la fracción molar de CO2 en el líquido es x=0.001, calcular la presión parcial de CO2 en equilibrio.',
+       solucion:'Ley de Henry: p = x·H = 0.001 × 1640<br>'+
+         '<b style="color:var(--accent)">p ≈ 1.64 atm</b>'},
+      {enunciado:'Sistema no ideal: x1=0.3 con γ1=1.8, Psat1=1200 mmHg; x2=0.7 con γ2=1.3, Psat2=600 mmHg (baja presión, vapor ~gas ideal). Calcular la presión de burbuja con Raoult modificada (γ-φ) y la composición del vapor.',
+       solucion:'P = x1γ1Psat1 + x2γ2Psat2 = 0.3×1.8×1200 + 0.7×1.3×600 = 648+546<br>'+
+         '<b style="color:var(--accent)">P ≈ 1194 mmHg</b><br>'+
+         'y1 = x1γ1Psat1/P = 648/1194 → <b style="color:var(--accent)">y1 ≈ 0.543</b>'},
+      {enunciado:'Una corriente con z1=0.5, z2=0.5 entra a un tambor flash con K1=2.5 y K2=0.5. Calcular V/F, las composiciones de líquido y de vapor.',
+       solucion:'Rachford-Rice: 0.5(2.5−1)/(1+ψ·1.5) + 0.5(0.5−1)/(1−ψ·0.5) = 0<br>'+
+         '0.75/(1+1.5ψ) = 0.25/(1−0.5ψ) → 0.75(1−0.5ψ)=0.25(1+1.5ψ) → 0.5=0.75ψ<br>'+
+         '<b style="color:var(--accent)">ψ = V/F ≈ 0.667</b><br>'+
+         'x1=z1/(1+ψ(K1−1))=0.5/(1+1) → <b style="color:var(--accent)">x1=0.25, x2=0.75</b><br>'+
+         'y1=K1x1=2.5×0.25 → <b style="color:var(--accent)">y1=0.625, y2=0.375</b>'},
+      {enunciado:'Para una reacción A⇌B en fase gaseosa a 298 K, ΔG°_rxn = −5.0 kJ/mol. Calcular la constante de equilibrio K y la conversión de equilibrio partiendo de A puro a 1 atm.',
+       solucion:'K = exp(−ΔG°/RT) = exp(5000/(8.314×298)) = exp(2.018)<br>'+
+         '<b style="color:var(--accent)">K ≈ 7.52</b><br>'+
+         'A⇌B con Δn=0: K = yB/yA = xe/(1−xe) → xe = K/(1+K) = 7.52/8.52<br>'+
+         '<b style="color:var(--accent)">xe ≈ 0.883 (88.3% de conversión)</b>'},
+      {enunciado:'Una reacción exotérmica tiene ΔH°_rxn=−40 kJ/mol y K1=10 a T1=500 K. Calcular K2 a T2=600 K usando la ecuación de Van’t Hoff.',
+       solucion:'ln(K2/K1) = −(ΔH°/R)·(1/T2 − 1/T1) = −(−40000/8.314)×(1/600−1/500)<br>'+
+         '1/600−1/500 = −0.000333 &nbsp;&nbsp; −ΔH°/R = 4811.6<br>'+
+         'ln(K2/K1) = 4811.6×(−0.000333) = −1.603 → K2/K1 = exp(−1.603) = 0.2013<br>'+
+         '<b style="color:var(--accent)">K2 ≈ 2.01</b> (K disminuye al subir T, como corresponde a una reacción exotérmica)'},
     ]
   },
 ];
