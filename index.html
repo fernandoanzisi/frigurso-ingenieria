@@ -1245,45 +1245,95 @@ const APUNTES=[
          'Donde Ẇₛ es el trabajo de eje (el que entrega/consume una bomba, turbina o compresor), y los términos de energía cinética (½v²) y potencial (gz) suelen despreciarse frente a ΔH en la mayoría de los equipos de proceso químico (salvo turbinas, toberas, o cuando se indica lo contrario).<br><br>'+
          'Simplificación muy usada: <b>Q̇ − Ẇₛ = ṁ·ΔH</b> (sin trabajo de eje ni cambios de energía cinética/potencial): esta es la que se aplica en intercambiadores de calor, por ejemplo.'},
 
-      {h:'4. Trabajo y calor en procesos con gas ideal',
+      {h:'4. Capacidades caloríficas',
+       p:'La <b>capacidad calorífica</b> indica cuánto calor hace falta para subir 1 grado la temperatura de una sustancia.<br><br>'+
+         '• <b>cv</b> = (∂u/∂T)ᵥ — a volumen constante, relacionada con ΔU: dU = n·cv·dT<br>'+
+         '• <b>cp</b> = (∂h/∂T)ₚ — a presión constante, relacionada con ΔH: dH = n·cp·dT<br><br>'+
+         'Para gas ideal se cumple siempre: <b>cp − cv = R</b> (por mol). Y γ = cp/cv (siempre &gt; 1).<br><br>'+
+         'En la realidad, cp y cv <b>dependen de la temperatura</b>. Se suelen representar con un polinomio empírico:<br>'+
+         '<div style="text-align:center;font-size:13px;font-weight:800;color:var(--gold);margin:8px 0">cp = a + bT + cT² + dT³</div>'+
+         'Para calcular ΔH entre T₁ y T₂ con cp variable: ΔH = ∫cp·dT entre T₁ y T₂ (integrar el polinomio término a término). Si el rango de T es chico, se puede usar un cp promedio constante sin mucho error.'},
+
+      {h:'5. Trabajo y calor en procesos con gas ideal',
        p:'Para un gas ideal (PV = nRT), en cada proceso simple del sistema cerrado:<br><br>'+
          '<b>Isotérmico</b> (T = cte): ΔU = 0 (para gas ideal, U depende solo de T) → Q = W = nRT·ln(V₂/V₁)<br><br>'+
          '<b>Isobárico</b> (P = cte): W = P·ΔV = nRΔT → Q = ΔH = n·cp·ΔT<br><br>'+
          '<b>Isocórico</b> (V = cte): W = 0 → Q = ΔU = n·cv·ΔT<br><br>'+
-         '<b>Adiabático</b> (Q = 0): W = −ΔU = −n·cv·ΔT. Para un adiabático reversible de gas ideal: P·Vᵞ = cte, con γ = cp/cv.<br><br>'+
+         '<b>Adiabático</b> (Q = 0): W = −ΔU = −n·cv·ΔT. Para un adiabático reversible de gas ideal: P·Vᵞ = cte, con γ = cp/cv, y también T·V^(γ−1) = cte, T^γ·P^(1−γ) = cte.<br><br>'+
          '<b>Politrópico</b> (P·Vⁿ = cte, n genérico): generaliza a todos los anteriores según el valor de n (n=0 isobárico, n=1 isotérmico, n=γ adiabático, n=∞ isocórico).'},
 
-      {h:'5. Segunda Ley de la Termodinámica',
+      {h:'6. Cambio de fase y calidad de vapor',
+       p:'Cuando una sustancia pura cambia de fase (líquido↔vapor) a presión constante, la temperatura se mantiene constante durante todo el cambio (temperatura de saturación Tsat, que depende de la presión).<br><br>'+
+         'En la región de mezcla líquido-vapor (dentro del "domo" en el diagrama P-V o T-V), se define el <b>título o calidad x</b> como la fracción másica de vapor:<br>'+
+         '<div style="text-align:center;font-size:15px;font-weight:800;color:var(--accent);margin:8px 0">x = m_vapor / (m_líquido + m_vapor)</div>'+
+         'Cualquier propiedad específica de la mezcla (v, u, h, s) se calcula interpolando entre el valor de líquido saturado (subíndice f) y vapor saturado (subíndice g) con el título:<br>'+
+         '<div style="text-align:center;font-size:14px;font-weight:800;color:var(--gold);margin:8px 0">v = vf + x·(vg − vf) &nbsp;&nbsp; h = hf + x·hfg &nbsp;&nbsp; s = sf + x·sfg</div>'+
+         'donde hfg = hg − hf es el <b>calor latente de vaporización</b>. Estos valores (vf, vg, hf, hg, sf, sg) se leen de las tablas de vapor saturado a la presión o temperatura del problema — por eso las tablas de vapor son una herramienta central de esta materia.<br><br>'+
+         'Fuera del domo: <b>líquido comprimido/subenfriado</b> (T &lt; Tsat a esa P) o <b>vapor sobrecalentado</b> (T &gt; Tsat a esa P) — ahí se usan las tablas correspondientes directamente con P y T, sin necesidad de título.'},
+
+      {h:'7. Segunda Ley de la Termodinámica',
        p:'Establece que los procesos ocurren espontáneamente en una dirección determinada, y que no toda la energía térmica puede convertirse en trabajo útil.<br><br>'+
          '<b>Enunciado de Kelvin-Planck</b>: es imposible que un dispositivo que opera en un ciclo reciba calor de un único reservorio y produzca una cantidad neta de trabajo igual (no puede haber una máquina térmica con 100% de eficiencia).<br><br>'+
          '<b>Enunciado de Clausius</b>: es imposible construir un dispositivo que, operando en un ciclo, no produzca otro efecto que la transferencia de calor de un cuerpo frío a uno caliente sin trabajo externo (el calor no fluye espontáneamente de frío a caliente).<br><br>'+
          'Ambos enunciados son equivalentes y son la base de por qué existe un límite superior (Carnot) para la eficiencia de cualquier máquina térmica real.'},
 
-      {h:'6. Entropía',
+      {h:'8. Entropía',
        p:'La entropía S es una propiedad de estado que mide el grado de "desorden" o la energía no disponible para producir trabajo. Su definición diferencial para un proceso reversible:<br><br>'+
          '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--accent);margin:8px 0">dS = δQrev / T</div>'+
          '<b>Balance de entropía</b> (análogo al de energía, pero la entropía SÍ se genera, no se conserva):<br><br>'+
          '<div style="text-align:center;font-size:14px;font-weight:800;color:var(--gold);margin:8px 0">ΔS_universo = ΔS_sistema + ΔS_entorno = S_gen ≥ 0</div>'+
          'S_gen = 0 solo en procesos reversibles (idealización); en todo proceso real, S_gen &gt; 0 (la entropía del universo siempre aumenta). Esta es la forma cuantitativa de la Segunda Ley.<br><br>'+
-         'Para gas ideal, cambio de entropía entre dos estados: ΔS = n·cp·ln(T₂/T₁) − n·R·ln(P₂/P₁)'},
+         'Para gas ideal, cambio de entropía entre dos estados: ΔS = n·cp·ln(T₂/T₁) − n·R·ln(P₂/P₁)<br><br>'+
+         'Un proceso <b>isentrópico</b> (S=cte) es la idealización de un proceso adiabático + reversible — se usa para modelar turbinas, compresores y bombas "ideales" antes de aplicarles una eficiencia real.'},
 
-      {h:'7. Ciclos termodinámicos',
-       p:'<b>Ciclo de Carnot</b>: el ciclo ideal de máxima eficiencia posible entre dos temperaturas, compuesto por 2 procesos isotérmicos y 2 adiabáticos reversibles. Su eficiencia depende solo de las temperaturas de los reservorios:<br><br>'+
+      {h:'9. Dispositivos de flujo estacionario',
+       p:'Equipos típicos de proceso, todos analizados con el balance de energía en sistema abierto (punto 3), cada uno con sus simplificaciones características:<br><br>'+
+         '• <b>Turbina</b>: el fluido se expande y produce trabajo de eje (Ẇs &gt; 0). Adiabática idealmente: Ẇs = ṁ(h_entrada − h_salida). Se define la <b>eficiencia isentrópica</b> ηₛ = W_real / W_isentrópico (compara contra la expansión ideal reversible hasta la misma presión final).<br><br>'+
+         '• <b>Compresor / Bomba</b>: consumen trabajo para aumentar la presión (Ẇs &lt; 0 con la convención de trabajo hecho POR el sistema). Igual concepto de eficiencia isentrópica, acá ηₛ = W_isentrópico / W_real (el real siempre consume más que el ideal).<br><br>'+
+         '• <b>Tobera</b>: acelera el fluido a costa de su entalpía (se transforma entalpía en energía cinética) — no hay trabajo de eje ni calor apreciable: h_entrada + ½v₁² = h_salida + ½v₂².<br><br>'+
+         '• <b>Difusor</b>: lo opuesto a la tobera, desacelera el fluido y aumenta su presión/entalpía.<br><br>'+
+         '• <b>Válvula de estrangulamiento</b> (Joule-Thomson): expansión brusca sin trabajo ni calor apreciables → proceso <b>isentálpico</b>: h_entrada ≈ h_salida. Muy usada en refrigeración para bajar la presión (y con ella, la temperatura) del refrigerante líquido.<br><br>'+
+         '• <b>Cámara de mezcla</b>: se juntan dos corrientes en una sola — balance de materia y energía combinados, sin trabajo ni calor: ṁ₁h₁ + ṁ₂h₂ = ṁ₃h₃.'},
+
+      {h:'10. Ciclos termodinámicos de potencia',
+       p:'<b>Ciclo de Carnot</b>: el ciclo ideal de máxima eficiencia posible entre dos temperaturas, compuesto por 2 procesos isotérmicos y 2 adiabáticos reversibles:<br><br>'+
          '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--accent);margin:8px 0">η_Carnot = 1 − Tf/Tc</div>'+
          'Ninguna máquina real puede superar esta eficiencia operando entre las mismas dos temperaturas (Tf y Tc en escala absoluta, Kelvin).<br><br>'+
-         '<b>Ciclo de Rankine</b> (relevante en ingeniería química por las plantas de vapor/cogeneración): 4 etapas — bombeo (isentrópico), calentamiento/evaporación (isobárico, en la caldera), expansión en turbina (isentrópica, produce trabajo neto) y condensación (isobárico). Su eficiencia real es menor que Carnot por las irreversibilidades de cada etapa.'},
+         '<b>Ciclo de Rankine</b> (el más relevante en ingeniería química — plantas de vapor y cogeneración), 4 etapas en serie:<br>'+
+         '1→2: Bombeo del líquido saturado (isentrópico, consume Wb poco)<br>'+
+         '2→3: Calentamiento + evaporación en la caldera (isobárico, entrega Qcaldera)<br>'+
+         '3→4: Expansión en la turbina (isentrópica idealmente, entrega Wt)<br>'+
+         '4→1: Condensación (isobárico, cede Qcondensador)<br><br>'+
+         '<div style="text-align:center;font-size:14px;font-weight:800;color:var(--gold);margin:8px 0">η_térmica = Wneto/Qcaldera = (Wt − Wb)/Qcaldera</div>'+
+         'Mejoras típicas: <b>recalentamiento</b> (se vuelve a calentar el vapor entre etapas de turbina, sube la eficiencia y evita título muy bajo a la salida) y <b>regeneración</b> (se precalienta el agua de alimentación con vapor extraído de la turbina).<br><br>'+
+         '<b>Ciclo Brayton</b> (turbinas a gas): compresión de aire, combustión a presión constante, expansión en turbina, escape — análogo al Rankine pero todo en fase gaseosa, sin condensador.'},
 
-      {h:'8. Ecuaciones de estado',
+      {h:'11. Ciclos de refrigeración',
+       p:'El <b>ciclo de compresión de vapor</b> es el más usado en refrigeración y aire acondicionado, 4 etapas:<br><br>'+
+         '1→2: Compresión del vapor (idealmente isentrópica, consume Wcomp)<br>'+
+         '2→3: Condensación (isobárica, cede calor Qcondensador al ambiente)<br>'+
+         '3→4: Expansión en válvula de estrangulamiento (isentálpica, h se mantiene, baja presión y temperatura)<br>'+
+         '4→1: Evaporación (isobárica, absorbe el calor útil Qevaporador del espacio a refrigerar)<br><br>'+
+         'Se evalúa con el <b>Coeficiente de Performance</b> (no es una eficiencia, puede ser mayor a 1):<br>'+
+         '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--accent);margin:8px 0">COP = Qevaporador / Wcompresor</div>'+
+         'Cuanto más alto el COP, menos trabajo hace falta para lograr el mismo efecto de enfriamiento — por eso se busca maximizarlo en el diseño.'},
+
+      {h:'12. Ecuaciones de estado',
        p:'<b>Gas ideal</b>: PV = nRT — válida a bajas presiones y altas temperaturas (lejos de la condensación).<br><br>'+
          '<b>Factor de compresibilidad Z</b>: PV = ZnRT, donde Z=1 para gas ideal. Se obtiene de cartas generalizadas (Standing-Katz) usando presión y temperatura reducidas: Pr=P/Pc, Tr=T/Tc (principio de estados correspondientes).<br><br>'+
          '<b>Ecuación de Van der Waals</b> (corrige el gas ideal por volumen molecular y atracción entre moléculas):<br>'+
          '<div style="text-align:center;font-size:13px;font-weight:800;color:var(--gold);margin:8px 0">(P + a/V²)(V − b) = RT</div>'+
          'donde a y b son constantes específicas de cada sustancia (relacionadas con Pc y Tc). Existen ecuaciones más precisas (Redlich-Kwong, Peng-Robinson) que se ven en cursos posteriores.'},
 
-      {h:'9. Diagramas termodinámicos',
-       p:'<b>Diagrama P-V</b>: el área bajo la curva de un proceso es el trabajo (∫P·dV). Útil para visualizar ciclos y comparar trabajo neto.<br><br>'+
+      {h:'13. Relaciones termodinámicas y exergía',
+       p:'<b>Relaciones de Maxwell</b>: se derivan de las 4 ecuaciones fundamentales (dU, dH, dA=energía libre de Helmholtz, dG=energía libre de Gibbs) e igualando derivadas cruzadas. Permiten calcular propiedades difíciles de medir (como S) a partir de propiedades P-V-T que sí se miden fácilmente. No hace falta memorizarlas todas, pero conviene reconocerlas si aparecen en el final.<br><br>'+
+         '<b>Exergía (disponibilidad)</b>: es el trabajo máximo teórico que se puede obtener de un sistema al llevarlo al equilibrio con el ambiente de referencia (T₀, P₀). Se relaciona con la <b>irreversibilidad</b> I = T₀·S_gen (la exergía que se "destruye" por generar entropía). Es la base del análisis de segunda ley aplicado a procesos reales, para identificar dónde se pierde más potencial de trabajo en una planta.'},
+
+      {h:'14. Diagramas termodinámicos',
+       p:'<b>Diagrama P-V</b>: el área bajo la curva de un proceso es el trabajo (∫P·dV). Útil para visualizar ciclos y comparar trabajo neto. Tiene el "domo" de saturación donde coexisten líquido y vapor.<br><br>'+
          '<b>Diagrama T-S</b>: el área bajo la curva de un proceso reversible es el calor (∫T·dS). Muy usado para analizar ciclos de potencia (Rankine, Brayton) porque el área del ciclo completo es el trabajo neto.<br><br>'+
-         '<b>Diagrama de Mollier (H-S)</b>: usado sobre todo con vapor de agua, permite leer directamente la entalpía tras una expansión o compresión isentrópica (útil para turbinas y compresores).'},
+         '<b>Diagrama de Mollier (H-S)</b>: usado sobre todo con vapor de agua, permite leer directamente la entalpía tras una expansión o compresión isentrópica (útil para turbinas) — una isentrópica es una recta vertical en este diagrama.<br><br>'+
+         '<b>Diagrama P-H</b>: el más usado en refrigeración, porque el ciclo de compresión de vapor se ve como un rectángulo aproximado y facilita leer directamente los calores y trabajos (todos son diferencias de h).'},
     ],
     ejercicios:[
       {enunciado:'2 moles de gas ideal se expanden isotérmicamente a 300 K desde 10 L hasta 30 L. Calcular el trabajo realizado por el gas.',
@@ -1313,6 +1363,25 @@ const APUNTES=[
          '(γ−1)/γ = 0.4/1.4 = 0.2857<br>'+
          'T₂ = 300 × (5/1)^0.2857 = 300 × 1.584<br>'+
          '<b style="color:var(--accent)">T₂ ≈ 475 K (≈ 202 °C)</b>'},
+      {enunciado:'Un recipiente contiene 2 kg de una mezcla líquido-vapor de agua a 100°C, con volumen específico v=0.8475 m³/kg. A esa temperatura, vf=0.001044 m³/kg y vg=1.6729 m³/kg. Calcular el título (calidad) x.',
+       solucion:'x = (v − vf)/(vg − vf)<br>'+
+         'x = (0.8475 − 0.001044) / (1.6729 − 0.001044) = 0.846456 / 1.671856<br>'+
+         '<b style="color:var(--accent)">x ≈ 0.506</b> (50.6% de la masa es vapor, 49.4% líquido)'},
+      {enunciado:'Una turbina de vapor recibe vapor con h₁=3200 kJ/kg. Si se expandiera de forma isentrópica llegaría a h₂ₛ=2400 kJ/kg, pero la turbina real tiene una eficiencia isentrópica del 85%. Calcular el trabajo real y la entalpía real de salida.',
+       solucion:'Trabajo isentrópico (ideal): W_s = h₁ − h₂ₛ = 3200 − 2400 = 800 kJ/kg<br>'+
+         'Trabajo real: W_real = ηₛ × W_s = 0.85 × 800<br>'+
+         '<b style="color:var(--accent)">W_real = 680 kJ/kg</b><br>'+
+         'Entalpía real de salida: h₂ = h₁ − W_real = 3200 − 680 = <b style="color:var(--accent)">2520 kJ/kg</b>'},
+      {enunciado:'Refrigerante entra a una válvula de expansión con h₁=280 kJ/kg. Calcular la entalpía de salida h₂ y explicar por qué.',
+       solucion:'La válvula de estrangulamiento no intercambia trabajo ni calor apreciable con el entorno (proceso adiabático sin trabajo de eje) → el balance de energía se reduce a h₁=h₂ (proceso <b>isentálpico</b>).<br>'+
+         '<b style="color:var(--accent)">h₂ = 280 kJ/kg</b> (lo que cambia es la presión y la temperatura, no la entalpía)'},
+      {enunciado:'En un ciclo de refrigeración por compresión de vapor, el evaporador absorbe 200 kJ/kg (efecto refrigerante) y el compresor consume 50 kJ/kg de trabajo. Calcular el COP.',
+       solucion:'COP = Q_evaporador / W_compresor = 200 / 50<br>'+
+         '<b style="color:var(--accent)">COP = 4</b> (por cada kJ de trabajo que consume el compresor, se extraen 4 kJ de calor del espacio a refrigerar)'},
+      {enunciado:'En un ciclo Rankine, la turbina produce 800 kJ/kg, la bomba consume 10 kJ/kg, y la caldera entrega 2500 kJ/kg. Calcular el trabajo neto y la eficiencia térmica del ciclo.',
+       solucion:'W_neto = W_turbina − W_bomba = 800 − 10 = 790 kJ/kg<br>'+
+         'η_térmica = W_neto / Q_caldera = 790 / 2500<br>'+
+         '<b style="color:var(--accent)">W_neto = 790 kJ/kg · η ≈ 31.6%</b>'},
     ]
   },
 ];
