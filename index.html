@@ -1891,6 +1891,38 @@ const APUNTES=[
          '1/600−1/500 = −0.000333 &nbsp;&nbsp; −ΔH°/R = 4811.6<br>'+
          'ln(K2/K1) = 4811.6×(−0.000333) = −1.603 → K2/K1 = exp(−1.603) = 0.2013<br>'+
          '<b style="color:var(--accent)">K2 ≈ 2.01</b> (K disminuye al subir T, como corresponde a una reacción exotérmica)'},
+      {fuente:'Parcial real de la cátedra, 1er cuatrimestre 2022',
+       enunciado:'Un sistema de potencia asociado a un concentrador solar térmico entrega 10 MW en forma de calor, en un calentador que se integra a un <b>ciclo Brayton con regenerador</b>. Circulan 1.62 kmol/s de nitrógeno (Tc=126.2 K, Pc=34 bar, ω=0.038) entre P=75 bar y P=219 bar. Turbina y compresor operan de forma reversible (isentrópica). El nitrógeno entra a la turbina a 764 K (219 bar). '+
+         '<b>a)</b> Calcular la eficiencia térmica del ciclo si la potencia consumida por el compresor es de 5.7 MW. '+
+         '<b>b)</b> Considerando el calentador y el enfriador como fuentes a TH=500°C y TL=22°C, analizar si el ciclo es termodinámicamente posible.',
+       solucion:'<b>a)</b> Con N2 como fluido real, se calculan las propiedades usando las <b>correlaciones generalizadas de Pitzer</b> (B⁰=0.083−0.422/Tr^1.6, B¹=0.139−0.172/Tr^4.2 — exactamente el método de la sección 10 de este apunte) para obtener la entalpía real de salida de la turbina. Balance de energía en la turbina: Ẇtur=ṁ(H₃−H₂)≈−10.12 MW.<br>'+
+         'η = −(Ẇtur+Ẇcomp)/Q̇H = −(−10.12+5.7)/10 → <b style="color:var(--accent)">η ≈ 44.2%</b><br><br>'+
+         '<b>b)</b> Balance de energía global: Ẇtur+Ẇcomp+Q̇H+Q̇L=0 → Q̇L=−5.58 MW.<br>'+
+         'Generación de entropía (fuentes a TH=773 K, TL=295 K): Sgen=−(Q̇H/TH+Q̇L/TL) → <b style="color:var(--accent)">Sgen≈5.98 kW/K &gt; 0</b><br>'+
+         'η_Carnot=1−TL/TH=1−295/773 → <b style="color:var(--accent)">η_Carnot≈61.8%</b><br>'+
+         'Como η_Carnot (61.8%) es mayor que la eficiencia real del ciclo (44.2%), y además Sgen&gt;0, el ciclo <b style="color:var(--accent)">es termodinámicamente posible</b>.'},
+      {fuente:'Parcial real de la cátedra, 1er cuatrimestre 2022',
+       enunciado:'Se mezclan, en forma isotérmica a 327 K y 2 bar, dos soluciones líquidas binarias de los mismos dos componentes: solución A (x₁=0.11) y solución B (x₁=0.87), con una relación molar ṅA/ṅB=0.972. El resultado es la solución C. El comportamiento no ideal de las tres soluciones se describe con G^E/RT = A(P,T)·x₁x₂ (modelo tipo Margules de un parámetro, dato del enunciado). Determinar el calor Q̇ intercambiado por mol de B, e indicar si el fluido de servicio necesario es agua de enfriamiento (25°C) o vapor de agua (100°C).',
+       solucion:'Balance de materia: ṅC=ṅA+ṅB=1.972ṅB. Composición de C por balance de componente 1: x₁^C=(0.11·0.972+0.87)/1.972 → <b style="color:var(--accent)">x₁^C≈0.495</b><br>'+
+         'Con el modelo G^E dado se obtiene H^E de cada corriente por la relación de Gibbs-Helmholtz (H^E=−RT²·∂(G^E/RT)/∂T): H_A^E≈0.174, H_B^E≈0.2, H_C^E≈0.444 (unidades del enunciado).<br>'+
+         'Balance de energía: ṅA·HA+ṅB·HB−ṅC·HC+Q̇=0 → despejando por mol de B:<br>'+
+         '<b style="color:var(--accent)">Q̇ ≈ +1.13 (por mol de B) → Q̇ &gt; 0</b><br>'+
+         'Como el sistema necesita <b>absorber</b> calor para mezclarse a T constante (mezclado endotérmico), el fluido de servicio debe ser <b style="color:var(--accent)">vapor de agua a 100°C</b> (no agua de enfriamiento).'},
+      {fuente:'Parcial real de la cátedra, 1er cuatrimestre 2022',
+       enunciado:'Una central térmica opera con un ciclo de agua (H₂O) para generar energía eléctrica, usando un horno de gas natural que actúa como fuente a T=627°C (900 K) constante, y agua de río a 27°C (300 K) como refrigerante, sin ΔT en ninguna de las dos fuentes. '+
+         '<b>a)</b> Deducir la expresión del rendimiento térmico de la planta si operara de forma reversible, y calcular su valor. '+
+         '<b>b)</b> El horno entrega vapor a 650 K (377°C) y 10 bar; la turbina tiene ηiso=0.85 y un caudal de 1800 kg/s; el condensador entrega líquido saturado a 100°C (P≈1.012 bar). Encontrar la temperatura real de salida de la turbina.',
+       solucion:'<b>a)</b> Operando en forma reversible (Sgen=0) entre dos fuentes a Tc=900 K y TF=300 K, el balance de entropía da el <b>ciclo de Carnot</b>:<br>'+
+         '<div style="text-align:center;font-weight:800;color:var(--accent)">η = 1 − TF/Tc = 1 − 300/900 → η ≈ 66.7%</div>'+
+         '<b>b)</b> Con ṁ=1800 kg/s=100 kmol/s. Para el estado isentrópico ideal a la salida de la turbina, el balance de entropía (con propiedades reales del agua) da <b style="color:var(--accent)">T₂,ideal≈371.8 K</b>, con lo que el trabajo reversible de la turbina resulta Ẇrev≈−923.7 MW.<br>'+
+         'Con la eficiencia isentrópica: Ẇreal=ηiso·Ẇrev=0.85×(−923.7) → <b style="color:var(--accent)">Ẇreal≈−785.1 MW</b><br>'+
+         'Resolviendo el balance de energía real de la turbina para la temperatura de salida real: <b style="color:var(--accent)">T₂,real≈414 K (≈141°C)</b>, consistente con vapor sobrecalentado a la presión del condensador (1.012 bar).'},
+    ],
+    recursos:[
+      {titulo:'Parciales reales resueltos (compilado)', descripcion:'Google Drive — carpeta con parciales reales de cuatrimestres anteriores', url:'https://drive.google.com/drive/folders/1yqEa9m4zfKtxEC_akp4Kp7eLyqVdAnBa'},
+      {titulo:'Finales reales resueltos (compilado)', descripcion:'Google Drive — carpeta con finales reales de cuatrimestres anteriores', url:'https://drive.google.com/drive/folders/1fo81i1KMaELvyK7j5jdds9gn_fAHUaGW'},
+      {titulo:'Repositorio de la cátedra (GitHub)', descripcion:'JoacoPorro/Termodinamica.de.los.Procesos — parciales, finales y resumen de la materia', url:'https://github.com/JoacoPorro/Termodinamica.de.los.Procesos'},
+      {titulo:'Planificación oficial de la cátedra (PDF)', descripcion:'Programa analítico completo, bibliografía y criterios de evaluación — FIUBA', url:'https://cms.fi.uba.ar/uploads/7645_97f9c76e38.pdf'},
     ]
   },
 ];
@@ -1916,8 +1948,19 @@ function abrirApunte(id){
     html+=a.ejercicios.map((ej,i)=>
       '<div class="card" style="margin-bottom:10px">'+
         '<div style="font-weight:700;color:var(--text);margin-bottom:6px">Ejercicio '+(i+1)+'</div>'+
+        (ej.fuente?'<div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:6px">🎓 '+esc(ej.fuente)+'</div>':'')+
         '<div style="margin-bottom:8px">'+ej.enunciado+'</div>'+
         '<div style="font-size:12px;color:var(--text3);border-top:1px solid var(--border);padding-top:8px">'+ej.solucion+'</div>'+
+      '</div>'
+    ).join('');
+  }
+  if(a.recursos&&a.recursos.length){
+    html+='<div style="font-size:14px;font-weight:800;color:var(--accent2);margin:22px 0 10px;border-top:1px solid var(--border);padding-top:16px">🔗 Exámenes reales y material de la cátedra</div>';
+    html+='<div style="font-size:12px;color:var(--text3);margin-bottom:10px">Compilados por estudiantes de FIUBA — parciales y finales reales tomados en cuatrimestres anteriores, para practicar con el estilo real de examen.</div>';
+    html+=a.recursos.map(r=>
+      '<div class="row-item" onclick="window.open(\''+r.url+'\',\'_blank\')">'+
+        '<div class="row-icon" style="background:rgba(14,165,233,.15)">📄</div>'+
+        '<div class="row-main"><div class="row-title">'+esc(r.titulo)+'</div><div class="row-sub">'+esc(r.descripcion)+'</div></div>'+
       '</div>'
     ).join('');
   }
