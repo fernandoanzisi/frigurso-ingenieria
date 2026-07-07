@@ -265,6 +265,94 @@
   <div style="padding:14px" id="calendario-contenido"></div>
 </div>
 
+<!-- MODAL REYNOLDS -->
+<div class="modal-overlay" id="modal-reynolds" onclick="if(event.target===this)cerrarModal('reynolds')">
+  <div class="modal">
+    <div class="modal-title">🌀 Número de Reynolds</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:14px">Re = (ρ · v · D) / μ — flujo en tubería circular</div>
+    <div class="field-wrap"><div class="field-label">Densidad ρ (kg/m³)</div><input type="number" class="input" id="re-rho" placeholder="Ej: 1000 (agua)" oninput="calcReynolds()"></div>
+    <div class="field-wrap"><div class="field-label">Velocidad v (m/s)</div><input type="number" class="input" id="re-v" placeholder="Ej: 2" oninput="calcReynolds()"></div>
+    <div class="field-wrap"><div class="field-label">Diámetro D (m)</div><input type="number" class="input" id="re-d" placeholder="Ej: 0.05" oninput="calcReynolds()"></div>
+    <div class="field-wrap"><div class="field-label">Viscosidad μ (Pa·s)</div><input type="number" class="input" id="re-mu" placeholder="Ej: 0.001 (agua)" oninput="calcReynolds()"></div>
+    <div id="re-resultado" class="card" style="font-size:13px;line-height:1.7"></div>
+    <button class="btn-ghost" onclick="cerrarModal('reynolds')" style="margin-top:10px">Cerrar</button>
+  </div>
+</div>
+
+<!-- MODAL BALANCE DE MATERIA -->
+<div class="modal-overlay" id="modal-balmateria" onclick="if(event.target===this)cerrarModal('balmateria')">
+  <div class="modal">
+    <div class="modal-title">⚖️ Balance de materia — mezclador</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:14px">Dos corrientes que se mezclan en estado estacionario: m₃ = m₁ + m₂, x₃ = (m₁x₁ + m₂x₂) / m₃</div>
+    <div class="field-wrap"><div class="field-label">Caudal corriente 1, m₁ (kg/h)</div><input type="number" class="input" id="bm-m1" placeholder="Ej: 100" oninput="calcBalanceMateria()"></div>
+    <div class="field-wrap"><div class="field-label">Fracción másica x₁ (0 a 1)</div><input type="number" class="input" id="bm-x1" placeholder="Ej: 0.3" step="0.01" oninput="calcBalanceMateria()"></div>
+    <div class="field-wrap"><div class="field-label">Caudal corriente 2, m₂ (kg/h)</div><input type="number" class="input" id="bm-m2" placeholder="Ej: 50" oninput="calcBalanceMateria()"></div>
+    <div class="field-wrap"><div class="field-label">Fracción másica x₂ (0 a 1)</div><input type="number" class="input" id="bm-x2" placeholder="Ej: 0.8" step="0.01" oninput="calcBalanceMateria()"></div>
+    <div id="bm-resultado" class="card" style="font-size:13px;line-height:1.7"></div>
+    <button class="btn-ghost" onclick="cerrarModal('balmateria')" style="margin-top:10px">Cerrar</button>
+  </div>
+</div>
+
+<!-- MODAL BALANCE DE ENERGIA -->
+<div class="modal-overlay" id="modal-balenergia" onclick="if(event.target===this)cerrarModal('balenergia')">
+  <div class="modal">
+    <div class="modal-title">🔥 Balance de energía — calor sensible</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:14px">Q = m · cp · ΔT (sin cambio de fase)</div>
+    <div class="field-wrap"><div class="field-label">Caudal másico m (kg/h)</div><input type="number" class="input" id="be-m" placeholder="Ej: 1000" oninput="calcBalanceEnergia()"></div>
+    <div class="field-wrap"><div class="field-label">Calor específico cp (kJ/kg·K)</div><input type="number" class="input" id="be-cp" placeholder="Ej: 4.18 (agua)" step="0.01" oninput="calcBalanceEnergia()"></div>
+    <div class="field-wrap"><div class="field-label">Temperatura inicial (°C)</div><input type="number" class="input" id="be-t1" placeholder="Ej: 20" oninput="calcBalanceEnergia()"></div>
+    <div class="field-wrap"><div class="field-label">Temperatura final (°C)</div><input type="number" class="input" id="be-t2" placeholder="Ej: 80" oninput="calcBalanceEnergia()"></div>
+    <div id="be-resultado" class="card" style="font-size:13px;line-height:1.7"></div>
+    <button class="btn-ghost" onclick="cerrarModal('balenergia')" style="margin-top:10px">Cerrar</button>
+  </div>
+</div>
+
+<!-- MODAL INTERCAMBIADOR DE CALOR -->
+<div class="modal-overlay" id="modal-intercambiador" onclick="if(event.target===this)cerrarModal('intercambiador')">
+  <div class="modal">
+    <div class="modal-title">♨️ Intercambiador de calor (LMTD)</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:14px">Q = U · A · ΔTₗₘ, con ΔTₗₘ = (ΔT₁ − ΔT₂) / ln(ΔT₁/ΔT₂)</div>
+    <div class="pill-sel" id="ic-flujo-pills" style="margin-bottom:12px"></div>
+    <div class="field-wrap"><div class="field-label">Caliente — entrada (°C)</div><input type="number" class="input" id="ic-tce" placeholder="Ej: 120" oninput="calcIntercambiador()"></div>
+    <div class="field-wrap"><div class="field-label">Caliente — salida (°C)</div><input type="number" class="input" id="ic-tcs" placeholder="Ej: 80" oninput="calcIntercambiador()"></div>
+    <div class="field-wrap"><div class="field-label">Fría — entrada (°C)</div><input type="number" class="input" id="ic-tfe" placeholder="Ej: 20" oninput="calcIntercambiador()"></div>
+    <div class="field-wrap"><div class="field-label">Fría — salida (°C)</div><input type="number" class="input" id="ic-tfs" placeholder="Ej: 60" oninput="calcIntercambiador()"></div>
+    <div class="field-wrap"><div class="field-label">Calor a intercambiar Q (kW, opcional)</div><input type="number" class="input" id="ic-q" placeholder="Si lo sabés, para calcular el área" oninput="calcIntercambiador()"></div>
+    <div class="field-wrap"><div class="field-label">Coeficiente global U (kW/m²·K, opcional)</div><input type="number" class="input" id="ic-u" placeholder="Ej: 0.5" step="0.01" oninput="calcIntercambiador()"></div>
+    <div id="ic-resultado" class="card" style="font-size:13px;line-height:1.7"></div>
+    <button class="btn-ghost" onclick="cerrarModal('intercambiador')" style="margin-top:10px">Cerrar</button>
+  </div>
+</div>
+
+<!-- MODAL MCCABE-THIELE -->
+<div class="modal-overlay" id="modal-mccabe" onclick="if(event.target===this)cerrarModal('mccabe')">
+  <div class="modal" style="max-height:94dvh">
+    <div class="modal-title">🧫 McCabe-Thiele — destilación binaria</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:14px">Equilibrio ideal y=αx/(1+(α−1)x), alimentación líquido saturado (q=1). Etapas teóricas, no incluye eficiencia de plato.</div>
+    <div class="field-wrap"><div class="field-label">Volatilidad relativa α</div><input type="number" class="input" id="mc-alfa" placeholder="Ej: 2.5" step="0.01" oninput="calcMcCabeThiele()"></div>
+    <div class="field-wrap"><div class="field-label">Composición del destilado xD</div><input type="number" class="input" id="mc-xd" placeholder="Ej: 0.95" step="0.01" min="0" max="1" oninput="calcMcCabeThiele()"></div>
+    <div class="field-wrap"><div class="field-label">Composición de la alimentación xF</div><input type="number" class="input" id="mc-xf" placeholder="Ej: 0.4" step="0.01" min="0" max="1" oninput="calcMcCabeThiele()"></div>
+    <div class="field-wrap"><div class="field-label">Composición de fondos xB</div><input type="number" class="input" id="mc-xb" placeholder="Ej: 0.05" step="0.01" min="0" max="1" oninput="calcMcCabeThiele()"></div>
+    <div class="field-wrap"><div class="field-label">Relación de reflujo R</div><input type="number" class="input" id="mc-r" placeholder="Ej: 2" step="0.01" oninput="calcMcCabeThiele()"></div>
+    <canvas id="mc-canvas" width="600" height="600" style="width:100%;height:auto;border-radius:12px;background:#0a1c26;margin-bottom:10px"></canvas>
+    <div id="mc-resultado" class="card" style="font-size:13px;line-height:1.7"></div>
+    <button class="btn-ghost" onclick="cerrarModal('mccabe')" style="margin-top:10px">Cerrar</button>
+  </div>
+</div>
+
+<!-- MODAL PRESION DE VAPOR / PSICROMETRIA -->
+<div class="modal-overlay" id="modal-vapor" onclick="if(event.target===this)cerrarModal('vapor')">
+  <div class="modal">
+    <div class="modal-title">💧 Presión de vapor del agua y humedad del aire</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:14px">Ecuación de Antoine para agua (1-100°C): log₁₀(P) = A − B/(C+T), P en mmHg, T en °C. Valores aproximados para cálculos rápidos, no reemplazan la tabla de vapor completa.</div>
+    <div class="field-wrap"><div class="field-label">Temperatura de bulbo seco (°C)</div><input type="number" class="input" id="vp-t" placeholder="Ej: 25" oninput="calcVaporPsicrometria()"></div>
+    <div class="field-wrap"><div class="field-label">Humedad relativa (%, opcional)</div><input type="number" class="input" id="vp-hr" placeholder="Ej: 60" min="0" max="100" oninput="calcVaporPsicrometria()"></div>
+    <div class="field-wrap"><div class="field-label">Presión atmosférica (mmHg, opcional)</div><input type="number" class="input" id="vp-patm" placeholder="760 (nivel del mar)" oninput="calcVaporPsicrometria()"></div>
+    <div id="vp-resultado" class="card" style="font-size:13px;line-height:1.7"></div>
+    <button class="btn-ghost" onclick="cerrarModal('vapor')" style="margin-top:10px">Cerrar</button>
+  </div>
+</div>
+
 <!-- MODAL MATERIA -->
 <div class="modal-overlay" id="modal-materia" onclick="if(event.target===this)cerrarModal('materia')">
   <div class="modal">
@@ -782,7 +870,240 @@ async function guardarEstadoMateria(){
   toast('✅ Guardado');
 }
 
-function renderCalculadoras(){}
+// ═══════════════════════════════════════════════════════════════
+// CALCULADORAS DE INGENIERÍA — con fórmula y pasos a la vista
+// ═══════════════════════════════════════════════════════════════
+const CALCULADORAS_INFO=[
+  {id:'reynolds', icon:'🌀', nombre:'Número de Reynolds', sub:'Régimen de flujo en tuberías'},
+  {id:'balmateria', icon:'⚖️', nombre:'Balance de materia', sub:'Mezclador de dos corrientes'},
+  {id:'balenergia', icon:'🔥', nombre:'Balance de energía', sub:'Calor sensible, Q = m·cp·ΔT'},
+  {id:'intercambiador', icon:'♨️', nombre:'Intercambiador de calor', sub:'Método LMTD'},
+  {id:'mccabe', icon:'🧫', nombre:'McCabe-Thiele', sub:'Etapas teóricas de destilación'},
+  {id:'vapor', icon:'💧', nombre:'Presión de vapor y humedad', sub:'Antoine + psicrometría del agua'},
+];
+function renderCalculadoras(){
+  const el=document.getElementById('calculadoras-lista');
+  el.innerHTML=CALCULADORAS_INFO.map(c=>
+    '<div class="row-item" onclick="abrirCalculadora(\''+c.id+'\')">'+
+      '<div class="row-icon" style="background:rgba(20,184,166,.15)">'+c.icon+'</div>'+
+      '<div class="row-main"><div class="row-title">'+esc(c.nombre)+'</div><div class="row-sub">'+esc(c.sub)+'</div></div>'+
+    '</div>'
+  ).join('');
+}
+function abrirCalculadora(id){
+  if(id==='intercambiador') renderFlujoIntercambiadorPills();
+  abrirModal(id);
+}
+
+// ── Reynolds ──
+function calcReynolds(){
+  const rho=parseFloat(document.getElementById('re-rho').value);
+  const v=parseFloat(document.getElementById('re-v').value);
+  const d=parseFloat(document.getElementById('re-d').value);
+  const mu=parseFloat(document.getElementById('re-mu').value);
+  const el=document.getElementById('re-resultado');
+  if(!rho||!v||!d||!mu){ el.innerHTML=''; return; }
+  const re=(rho*v*d)/mu;
+  const regimen=re<2100?'Laminar':(re<=4000?'Transición':'Turbulento');
+  const color=re<2100?'var(--accent2)':(re<=4000?'var(--gold)':'var(--red)');
+  el.innerHTML=
+    '<div>Re = (ρ·v·D)/μ = ('+rho+' × '+v+' × '+d+') / '+mu+'</div>'+
+    '<div style="margin-top:6px;font-size:20px;font-weight:900;font-family:var(--mono);color:'+color+'">Re = '+re.toLocaleString('es-AR',{maximumFractionDigits:0})+'</div>'+
+    '<div style="margin-top:4px;font-weight:700;color:'+color+'">Régimen: '+regimen+'</div>'+
+    '<div style="margin-top:6px;font-size:11px;color:var(--text3)">Laminar &lt; 2100 · Transición 2100–4000 · Turbulento &gt; 4000</div>';
+}
+
+// ── Balance de materia ──
+function calcBalanceMateria(){
+  const m1=parseFloat(document.getElementById('bm-m1').value);
+  const x1=parseFloat(document.getElementById('bm-x1').value);
+  const m2=parseFloat(document.getElementById('bm-m2').value);
+  const x2=parseFloat(document.getElementById('bm-x2').value);
+  const el=document.getElementById('bm-resultado');
+  if(isNaN(m1)||isNaN(x1)||isNaN(m2)||isNaN(x2)){ el.innerHTML=''; return; }
+  const m3=m1+m2;
+  const x3=(m1*x1+m2*x2)/m3;
+  el.innerHTML=
+    '<div>Balance total: m₃ = m₁ + m₂ = '+m1+' + '+m2+' = <b>'+m3.toLocaleString('es-AR')+' kg/h</b></div>'+
+    '<div style="margin-top:6px">Balance por componente: x₃ = (m₁x₁ + m₂x₂)/m₃ = ('+m1+'×'+x1+' + '+m2+'×'+x2+') / '+m3.toFixed(2)+'</div>'+
+    '<div style="margin-top:6px;font-size:20px;font-weight:900;font-family:var(--mono);color:var(--accent)">x₃ = '+x3.toFixed(4)+'</div>';
+}
+
+// ── Balance de energía (calor sensible) ──
+function calcBalanceEnergia(){
+  const m=parseFloat(document.getElementById('be-m').value);
+  const cp=parseFloat(document.getElementById('be-cp').value);
+  const t1=parseFloat(document.getElementById('be-t1').value);
+  const t2=parseFloat(document.getElementById('be-t2').value);
+  const el=document.getElementById('be-resultado');
+  if(!m||!cp||isNaN(t1)||isNaN(t2)){ el.innerHTML=''; return; }
+  const dT=t2-t1;
+  const qKjH=m*cp*dT;
+  const qKw=qKjH/3600;
+  el.innerHTML=
+    '<div>Q = m·cp·ΔT = '+m+' × '+cp+' × ('+t2+' − '+t1+') = '+m+' × '+cp+' × '+dT+'</div>'+
+    '<div style="margin-top:6px;font-size:20px;font-weight:900;font-family:var(--mono);color:var(--accent)">Q = '+qKjH.toLocaleString('es-AR',{maximumFractionDigits:0})+' kJ/h ≈ '+qKw.toFixed(2)+' kW</div>'+
+    '<div style="margin-top:4px;color:'+(dT>=0?'var(--gold)':'var(--accent2)')+'">'+(dT>=0?'🔥 Se entrega calor a la corriente (se calienta)':'❄️ Se retira calor de la corriente (se enfría)')+'</div>';
+}
+
+// ── Intercambiador de calor (LMTD) ──
+let _flujoIntercambiador='contra';
+function renderFlujoIntercambiadorPills(){
+  document.getElementById('ic-flujo-pills').innerHTML=
+    '<button type="button" class="pill '+(_flujoIntercambiador==='contra'?'sel':'')+'" onclick="_flujoIntercambiador=\'contra\';renderFlujoIntercambiadorPills();calcIntercambiador()">⇄ Contracorriente</button>'+
+    '<button type="button" class="pill '+(_flujoIntercambiador==='paralelo'?'sel':'')+'" onclick="_flujoIntercambiador=\'paralelo\';renderFlujoIntercambiadorPills();calcIntercambiador()">⇉ Paralelo</button>';
+}
+function calcIntercambiador(){
+  const tce=parseFloat(document.getElementById('ic-tce').value);
+  const tcs=parseFloat(document.getElementById('ic-tcs').value);
+  const tfe=parseFloat(document.getElementById('ic-tfe').value);
+  const tfs=parseFloat(document.getElementById('ic-tfs').value);
+  const q=parseFloat(document.getElementById('ic-q').value);
+  const u=parseFloat(document.getElementById('ic-u').value);
+  const el=document.getElementById('ic-resultado');
+  if(isNaN(tce)||isNaN(tcs)||isNaN(tfe)||isNaN(tfs)){ el.innerHTML=''; return; }
+  let dT1,dT2;
+  if(_flujoIntercambiador==='contra'){ dT1=tce-tfs; dT2=tcs-tfe; }
+  else { dT1=tce-tfe; dT2=tcs-tfs; }
+  if(dT1<=0||dT2<=0){ el.innerHTML='<div style="color:var(--red)">⚠️ Revisá las temperaturas: alguna diferencia da negativa o cero (¿el fluido frío sale más caliente que el caliente?).</div>'; return; }
+  const lmtd=Math.abs(dT1-dT2)<1e-9?dT1:(dT1-dT2)/Math.log(dT1/dT2);
+  let html='<div>ΔT₁ = '+dT1.toFixed(2)+' °C · ΔT₂ = '+dT2.toFixed(2)+' °C</div>'+
+    '<div style="margin-top:6px">ΔTₗₘ = (ΔT₁ − ΔT₂) / ln(ΔT₁/ΔT₂) = ('+dT1.toFixed(2)+' − '+dT2.toFixed(2)+') / ln('+dT1.toFixed(2)+'/'+dT2.toFixed(2)+')</div>'+
+    '<div style="margin-top:6px;font-size:20px;font-weight:900;font-family:var(--mono);color:var(--accent)">ΔTₗₘ = '+lmtd.toFixed(2)+' °C</div>';
+  if(q&&u){
+    const area=q/(u*lmtd);
+    html+='<div style="margin-top:8px">Área requerida: A = Q/(U·ΔTₗₘ) = '+q+' / ('+u+' × '+lmtd.toFixed(2)+')</div>'+
+      '<div style="font-size:18px;font-weight:900;font-family:var(--mono);color:var(--gold)">A ≈ '+area.toFixed(2)+' m²</div>';
+  } else {
+    html+='<div style="margin-top:8px;font-size:11px;color:var(--text3)">Cargá Q y U para calcular el área de intercambio necesaria.</div>';
+  }
+  el.innerHTML=html;
+}
+
+// ── McCabe-Thiele ──
+function eqCurveY(alfa,x){ return alfa*x/(1+(alfa-1)*x); }
+function eqCurveXFromY(alfa,y){ return y/(alfa-y*(alfa-1)); }
+function calcularEtapasMcCabe(alfa,xD,xF,xB,R){
+  const yIntersect=(R/(R+1))*xF+xD/(R+1);
+  const xIntersect=xF;
+  if(yIntersect>=eqCurveY(alfa,xIntersect)){
+    return {error:'La relación de reflujo es menor a la mínima para esta separación — no se puede resolver así. Subí R.'};
+  }
+  function yRectificacion(x){ return (R/(R+1))*x+xD/(R+1); }
+  const pendienteAgot=(yIntersect-xB)/(xIntersect-xB);
+  function yAgotamiento(x){ return pendienteAgot*(x-xB)+xB; }
+  const puntos=[{x:xD,y:xD}];
+  let x=xD,y=xD,etapas=0,etapaAlimentacion=null;
+  const MAX_ETAPAS=60;
+  while(x>xB+1e-6&&etapas<MAX_ETAPAS){
+    const xEq=eqCurveXFromY(alfa,y);
+    if(xEq>=x){ return {error:'No se pudo resolver — revisá que α, xD, xF y xB tengan sentido físico (0 &lt; xB &lt; xF &lt; xD &lt; 1, α &gt; 1).'}; }
+    puntos.push({x:xEq,y:y});
+    etapas++;
+    let yOp;
+    if(xEq>xIntersect){ yOp=yRectificacion(xEq); }
+    else { yOp=yAgotamiento(xEq); if(etapaAlimentacion===null) etapaAlimentacion=etapas; }
+    puntos.push({x:xEq,y:yOp});
+    x=xEq; y=yOp;
+  }
+  if(etapas>=MAX_ETAPAS) return {error:'No converge en un número razonable de etapas — probá con una relación de reflujo más alta.'};
+  return {etapas,puntos,yIntersect,xIntersect,pendienteAgot,etapaAlimentacion,yRectificacion,yAgotamiento};
+}
+function dibujarMcCabe(alfa,xD,xF,xB,resultado){
+  const canvas=document.getElementById('mc-canvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height,pad=40;
+  const toPx=(x,y)=>[pad+x*(W-2*pad), H-pad-y*(H-2*pad)];
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#0a1c26'; ctx.fillRect(0,0,W,H);
+  // ejes
+  ctx.strokeStyle='#1c3d45'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(pad,pad); ctx.lineTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+  // diagonal
+  ctx.strokeStyle='#5b7d7a'; ctx.setLineDash([4,4]);
+  ctx.beginPath(); let [x0,y0]=toPx(0,0),[x1,y1]=toPx(1,1); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke();
+  ctx.setLineDash([]);
+  // curva de equilibrio
+  ctx.strokeStyle='#14b8a6'; ctx.lineWidth=2.5;
+  ctx.beginPath();
+  for(let i=0;i<=100;i++){ const x=i/100; const y=eqCurveY(alfa,x); const [px,py]=toPx(x,y); if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py); }
+  ctx.stroke();
+  if(!resultado.error){
+    // recta de operacion de rectificacion: desde (xD,xD) hasta interseccion
+    ctx.strokeStyle='#0ea5e9'; ctx.lineWidth=2;
+    ctx.beginPath();
+    let [rx0,ry0]=toPx(xD,xD), [rx1,ry1]=toPx(resultado.xIntersect,resultado.yIntersect);
+    ctx.moveTo(rx0,ry0); ctx.lineTo(rx1,ry1); ctx.stroke();
+    // recta de agotamiento: desde (xB,xB) hasta interseccion
+    ctx.strokeStyle='#f59e0b';
+    ctx.beginPath();
+    let [sx0,sy0]=toPx(xB,xB), [sx1,sy1]=toPx(resultado.xIntersect,resultado.yIntersect);
+    ctx.moveTo(sx0,sy0); ctx.lineTo(sx1,sy1); ctx.stroke();
+    // escalera
+    ctx.strokeStyle='#eef6f5'; ctx.lineWidth=1.5;
+    ctx.beginPath();
+    resultado.puntos.forEach((p,i)=>{ const [px,py]=toPx(p.x,p.y); if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py); });
+    ctx.stroke();
+  }
+  // marcas xB, xF, xD
+  ctx.fillStyle='#a8c3c1'; ctx.font='11px sans-serif';
+  [['xB',xB],['xF',xF],['xD',xD]].forEach(([lbl,val])=>{
+    const [px,py]=toPx(val,0);
+    ctx.fillText(lbl,px-8,H-pad+16);
+  });
+}
+function calcMcCabeThiele(){
+  const alfa=parseFloat(document.getElementById('mc-alfa').value);
+  const xD=parseFloat(document.getElementById('mc-xd').value);
+  const xF=parseFloat(document.getElementById('mc-xf').value);
+  const xB=parseFloat(document.getElementById('mc-xb').value);
+  const R=parseFloat(document.getElementById('mc-r').value);
+  const el=document.getElementById('mc-resultado');
+  if(!alfa||isNaN(xD)||isNaN(xF)||isNaN(xB)||isNaN(R)){ el.innerHTML=''; return; }
+  if(!(0<xB&&xB<xF&&xF<xD&&xD<1)||alfa<=1||R<=0){
+    el.innerHTML='<div style="color:var(--red)">⚠️ Verificá: 0 &lt; xB &lt; xF &lt; xD &lt; 1, α &gt; 1, R &gt; 0</div>';
+    dibujarMcCabe(alfa>1?alfa:1.5,xD||0.9,xF||0.5,xB||0.1,{error:true});
+    return;
+  }
+  const resultado=calcularEtapasMcCabe(alfa,xD,xF,xB,R);
+  dibujarMcCabe(alfa,xD,xF,xB,resultado);
+  if(resultado.error){ el.innerHTML='<div style="color:var(--red)">⚠️ '+resultado.error+'</div>'; return; }
+  el.innerHTML=
+    '<div>Recta de rectificación: y = (R/(R+1))x + xD/(R+1) = '+(R/(R+1)).toFixed(3)+'x + '+(xD/(R+1)).toFixed(3)+'</div>'+
+    '<div style="margin-top:4px">Recta de agotamiento (alimentación líquido saturado, q=1): pendiente '+resultado.pendienteAgot.toFixed(3)+'</div>'+
+    '<div style="margin-top:8px;font-size:22px;font-weight:900;font-family:var(--mono);color:var(--accent)">'+resultado.etapas+' etapas teóricas</div>'+
+    (resultado.etapaAlimentacion?'<div style="margin-top:4px">La alimentación entra en la etapa N° '+resultado.etapaAlimentacion+' (contando desde el tope)</div>':'');
+}
+
+// ── Presión de vapor (Antoine) y humedad del aire ──
+function antoinePsatMmHg(T){
+  // Antoine para agua, valido 1-100 C, P en mmHg, T en C (NIST / Perry)
+  const A=8.07131,B=1730.63,C=233.426;
+  return Math.pow(10, A - B/(C+T));
+}
+function antoineTsatFromP(Pmmhg){
+  const A=8.07131,B=1730.63,C=233.426;
+  return B/(A-Math.log10(Pmmhg))-C;
+}
+function calcVaporPsicrometria(){
+  const T=parseFloat(document.getElementById('vp-t').value);
+  const hr=parseFloat(document.getElementById('vp-hr').value);
+  const patm=parseFloat(document.getElementById('vp-patm').value)||760;
+  const el=document.getElementById('vp-resultado');
+  if(isNaN(T)){ el.innerHTML=''; return; }
+  if(T<1||T>100){ el.innerHTML='<div style="color:var(--gold)">⚠️ La ecuación de Antoine usada es válida entre 1°C y 100°C.</div>'; return; }
+  const psat=antoinePsatMmHg(T);
+  let html='<div>log₁₀(Psat) = 8.07131 − 1730.63/(233.426+'+T+')</div>'+
+    '<div style="margin-top:6px;font-size:20px;font-weight:900;font-family:var(--mono);color:var(--accent)">Psat = '+psat.toFixed(1)+' mmHg ≈ '+(psat/760).toFixed(4)+' atm</div>';
+  if(!isNaN(hr)){
+    const pv=psat*(hr/100);
+    const w=0.622*pv/(patm-pv);
+    html+='<div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">Presión parcial de vapor: Pv = Psat × HR = '+psat.toFixed(1)+' × '+(hr/100).toFixed(2)+' = '+pv.toFixed(1)+' mmHg</div>'+
+      '<div style="margin-top:6px">Humedad absoluta: W = 0.622×Pv/(Patm−Pv) = 0.622×'+pv.toFixed(1)+'/('+patm+'−'+pv.toFixed(1)+')</div>'+
+      '<div style="margin-top:6px;font-size:18px;font-weight:900;font-family:var(--mono);color:var(--gold)">W ≈ '+(w*1000).toFixed(2)+' g agua / kg aire seco</div>';
+  }
+  el.innerHTML=html;
+}
 function renderFichas(){}
 function renderCalendario(){}
 function renderMas(){
