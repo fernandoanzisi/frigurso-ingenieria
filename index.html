@@ -224,6 +224,11 @@
 <div class="page" id="page-mas">
   <div class="header"><div class="header-title">📋 Más</div></div>
   <div style="padding:14px;display:flex;flex-direction:column;gap:10px">
+    <button class="admin-menu-btn" onclick="navGo('apuntes',document.getElementById('nav-mas'))">
+      <span class="admin-menu-icon">📝</span>
+      <span class="admin-menu-txt"><span class="admin-menu-titulo">Apuntes</span><span class="admin-menu-sub">Resúmenes de teoría por materia</span></span>
+      <span class="admin-menu-arrow">›</span>
+    </button>
     <button class="admin-menu-btn" onclick="navGo('calendario',document.getElementById('nav-mas'))">
       <span class="admin-menu-icon">📅</span>
       <span class="admin-menu-txt"><span class="admin-menu-titulo">Calendario y notas</span><span class="admin-menu-sub" id="mas-cal-sub">Parciales, finales y promedio</span></span>
@@ -256,6 +261,21 @@
       <span class="admin-menu-txt"><span class="admin-menu-titulo" style="color:var(--red)">Bloquear app</span><span class="admin-menu-sub">Volver a pedir contraseña</span></span>
       <span class="admin-menu-arrow">›</span>
     </button>
+  </div>
+</div>
+
+<!-- APUNTES -->
+<div class="page" id="page-apuntes">
+  <div class="header"><div style="display:flex;align-items:center;gap:8px;width:100%"><button class="btn-icon" onclick="navGo('mas',document.getElementById('nav-mas'))">←</button><div class="header-title">📝 Apuntes</div></div></div>
+  <div style="padding:14px" id="apuntes-lista"></div>
+</div>
+
+<!-- MODAL APUNTE DETALLE -->
+<div class="modal-overlay" id="modal-apunte-detalle" onclick="if(event.target===this)cerrarModal('apunte-detalle')">
+  <div class="modal" style="max-height:94dvh">
+    <div class="modal-title" id="apunte-titulo">Apunte</div>
+    <div id="apunte-contenido" style="font-size:13px;line-height:1.7;color:var(--text2)"></div>
+    <button class="btn-ghost" onclick="cerrarModal('apunte-detalle')" style="margin-top:14px">Cerrar</button>
   </div>
 </div>
 
@@ -669,6 +689,7 @@ function navGo(page,btn){
   if(page==='fichas') renderFichas();
   if(page==='mas') renderMas();
   if(page==='calendario') renderCalendario();
+  if(page==='apuntes') renderApuntes();
   window.scrollTo(0,0);
   if(!_poppingState&&page!=='home') history.pushState({page},'','');
 }
@@ -1195,6 +1216,138 @@ function renderFichas(){
 }
 
 // ═══════════════════════════════════════════════════════════════
+// APUNTES — resúmenes de teoría por materia (se van agregando de a una)
+// ═══════════════════════════════════════════════════════════════
+const APUNTES=[
+  {
+    id:'termodinamica',
+    materiaId:'termoprocesos',
+    titulo:'Termodinámica de los Procesos',
+    secciones:[
+      {h:'1. Sistema, entorno y propiedades',
+       p:'Un <b>sistema</b> es la porción del universo que elegimos estudiar; todo lo demás es el <b>entorno</b>.<br><br>'+
+         '• <b>Sistema cerrado</b>: no hay transferencia de masa con el entorno, solo de energía (calor y/o trabajo). Ej: un pistón-cilindro sellado.<br>'+
+         '• <b>Sistema abierto</b> (volumen de control): hay transferencia de masa Y energía — es el caso más común en ingeniería química (reactores, columnas de destilación, intercambiadores, bombas).<br>'+
+         '• <b>Sistema aislado</b>: no hay transferencia de masa ni de energía con el entorno.<br><br>'+
+         'Las <b>propiedades de estado</b> (P, T, V, U, H, S) dependen solo del estado actual del sistema, no de cómo se llegó a él (son funciones de punto). En cambio Q y W son <b>funciones de trayectoria</b>: dependen del camino recorrido entre dos estados, no solo de los estados inicial y final.<br><br>'+
+         'Un proceso es <b>cuasiestático</b> (o de cuasi-equilibrio) cuando ocurre tan lentamente que el sistema pasa por una sucesión de estados de equilibrio — es la idealización que permite calcular trabajo como ∫P·dV.'},
+
+      {h:'2. Primera Ley — sistemas cerrados',
+       p:'La energía no se crea ni se destruye, solo se transforma. Para un sistema cerrado entre dos estados:<br><br>'+
+         '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--accent);margin:8px 0">ΔU = Q − W</div>'+
+         'Convención más usada en ingeniería (IUPAC): <b>Q</b> positivo si entra calor al sistema, <b>W</b> positivo si el sistema realiza trabajo sobre el entorno (a veces se usa la convención opuesta para W — siempre hay que aclarar cuál se usa antes de resolver un problema).<br><br>'+
+         'Para un proceso a volumen constante sin trabajo de eje: Q = ΔU.<br>'+
+         'Para un proceso a presión constante (el más común en laboratorio/planta, sistema abierto a la atmósfera): Q = ΔH, porque el trabajo de expansión contra la presión constante ya está incluido en la entalpía (H = U + PV).'},
+
+      {h:'3. Primera Ley — sistemas abiertos (volumen de control)',
+       p:'Es la que más se usa en ingeniería química, porque la mayoría de los equipos de proceso son de flujo continuo. El balance de energía general para un volumen de control en estado estacionario:<br><br>'+
+         '<div style="text-align:center;font-size:14px;font-weight:800;color:var(--accent);margin:8px 0">Q̇ − Ẇₛ = Δ(H + ½v² + gz) · ṁ</div>'+
+         'Donde Ẇₛ es el trabajo de eje (el que entrega/consume una bomba, turbina o compresor), y los términos de energía cinética (½v²) y potencial (gz) suelen despreciarse frente a ΔH en la mayoría de los equipos de proceso químico (salvo turbinas, toberas, o cuando se indica lo contrario).<br><br>'+
+         'Simplificación muy usada: <b>Q̇ − Ẇₛ = ṁ·ΔH</b> (sin trabajo de eje ni cambios de energía cinética/potencial): esta es la que se aplica en intercambiadores de calor, por ejemplo.'},
+
+      {h:'4. Trabajo y calor en procesos con gas ideal',
+       p:'Para un gas ideal (PV = nRT), en cada proceso simple del sistema cerrado:<br><br>'+
+         '<b>Isotérmico</b> (T = cte): ΔU = 0 (para gas ideal, U depende solo de T) → Q = W = nRT·ln(V₂/V₁)<br><br>'+
+         '<b>Isobárico</b> (P = cte): W = P·ΔV = nRΔT → Q = ΔH = n·cp·ΔT<br><br>'+
+         '<b>Isocórico</b> (V = cte): W = 0 → Q = ΔU = n·cv·ΔT<br><br>'+
+         '<b>Adiabático</b> (Q = 0): W = −ΔU = −n·cv·ΔT. Para un adiabático reversible de gas ideal: P·Vᵞ = cte, con γ = cp/cv.<br><br>'+
+         '<b>Politrópico</b> (P·Vⁿ = cte, n genérico): generaliza a todos los anteriores según el valor de n (n=0 isobárico, n=1 isotérmico, n=γ adiabático, n=∞ isocórico).'},
+
+      {h:'5. Segunda Ley de la Termodinámica',
+       p:'Establece que los procesos ocurren espontáneamente en una dirección determinada, y que no toda la energía térmica puede convertirse en trabajo útil.<br><br>'+
+         '<b>Enunciado de Kelvin-Planck</b>: es imposible que un dispositivo que opera en un ciclo reciba calor de un único reservorio y produzca una cantidad neta de trabajo igual (no puede haber una máquina térmica con 100% de eficiencia).<br><br>'+
+         '<b>Enunciado de Clausius</b>: es imposible construir un dispositivo que, operando en un ciclo, no produzca otro efecto que la transferencia de calor de un cuerpo frío a uno caliente sin trabajo externo (el calor no fluye espontáneamente de frío a caliente).<br><br>'+
+         'Ambos enunciados son equivalentes y son la base de por qué existe un límite superior (Carnot) para la eficiencia de cualquier máquina térmica real.'},
+
+      {h:'6. Entropía',
+       p:'La entropía S es una propiedad de estado que mide el grado de "desorden" o la energía no disponible para producir trabajo. Su definición diferencial para un proceso reversible:<br><br>'+
+         '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--accent);margin:8px 0">dS = δQrev / T</div>'+
+         '<b>Balance de entropía</b> (análogo al de energía, pero la entropía SÍ se genera, no se conserva):<br><br>'+
+         '<div style="text-align:center;font-size:14px;font-weight:800;color:var(--gold);margin:8px 0">ΔS_universo = ΔS_sistema + ΔS_entorno = S_gen ≥ 0</div>'+
+         'S_gen = 0 solo en procesos reversibles (idealización); en todo proceso real, S_gen &gt; 0 (la entropía del universo siempre aumenta). Esta es la forma cuantitativa de la Segunda Ley.<br><br>'+
+         'Para gas ideal, cambio de entropía entre dos estados: ΔS = n·cp·ln(T₂/T₁) − n·R·ln(P₂/P₁)'},
+
+      {h:'7. Ciclos termodinámicos',
+       p:'<b>Ciclo de Carnot</b>: el ciclo ideal de máxima eficiencia posible entre dos temperaturas, compuesto por 2 procesos isotérmicos y 2 adiabáticos reversibles. Su eficiencia depende solo de las temperaturas de los reservorios:<br><br>'+
+         '<div style="text-align:center;font-size:16px;font-weight:800;color:var(--accent);margin:8px 0">η_Carnot = 1 − Tf/Tc</div>'+
+         'Ninguna máquina real puede superar esta eficiencia operando entre las mismas dos temperaturas (Tf y Tc en escala absoluta, Kelvin).<br><br>'+
+         '<b>Ciclo de Rankine</b> (relevante en ingeniería química por las plantas de vapor/cogeneración): 4 etapas — bombeo (isentrópico), calentamiento/evaporación (isobárico, en la caldera), expansión en turbina (isentrópica, produce trabajo neto) y condensación (isobárico). Su eficiencia real es menor que Carnot por las irreversibilidades de cada etapa.'},
+
+      {h:'8. Ecuaciones de estado',
+       p:'<b>Gas ideal</b>: PV = nRT — válida a bajas presiones y altas temperaturas (lejos de la condensación).<br><br>'+
+         '<b>Factor de compresibilidad Z</b>: PV = ZnRT, donde Z=1 para gas ideal. Se obtiene de cartas generalizadas (Standing-Katz) usando presión y temperatura reducidas: Pr=P/Pc, Tr=T/Tc (principio de estados correspondientes).<br><br>'+
+         '<b>Ecuación de Van der Waals</b> (corrige el gas ideal por volumen molecular y atracción entre moléculas):<br>'+
+         '<div style="text-align:center;font-size:13px;font-weight:800;color:var(--gold);margin:8px 0">(P + a/V²)(V − b) = RT</div>'+
+         'donde a y b son constantes específicas de cada sustancia (relacionadas con Pc y Tc). Existen ecuaciones más precisas (Redlich-Kwong, Peng-Robinson) que se ven en cursos posteriores.'},
+
+      {h:'9. Diagramas termodinámicos',
+       p:'<b>Diagrama P-V</b>: el área bajo la curva de un proceso es el trabajo (∫P·dV). Útil para visualizar ciclos y comparar trabajo neto.<br><br>'+
+         '<b>Diagrama T-S</b>: el área bajo la curva de un proceso reversible es el calor (∫T·dS). Muy usado para analizar ciclos de potencia (Rankine, Brayton) porque el área del ciclo completo es el trabajo neto.<br><br>'+
+         '<b>Diagrama de Mollier (H-S)</b>: usado sobre todo con vapor de agua, permite leer directamente la entalpía tras una expansión o compresión isentrópica (útil para turbinas y compresores).'},
+    ],
+    ejercicios:[
+      {enunciado:'2 moles de gas ideal se expanden isotérmicamente a 300 K desde 10 L hasta 30 L. Calcular el trabajo realizado por el gas.',
+       solucion:'Proceso isotérmico → ΔU=0 → W = Q = nRT·ln(V₂/V₁)<br>'+
+         'W = 2 mol × 8.314 J/mol·K × 300 K × ln(30/10)<br>'+
+         'W = 4988.4 × ln(3) = 4988.4 × 1.0986<br>'+
+         '<b style="color:var(--accent)">W ≈ 5478 J ≈ 5.48 kJ</b> (el gas entrega ese trabajo al entorno)'},
+      {enunciado:'Por un intercambiador circulan 2000 kg/h de agua líquida que se calienta de 25°C a 70°C (cp = 4.18 kJ/kg·K). Calcular el calor necesario en kW.',
+       solucion:'Balance de energía en flujo, sin trabajo de eje: Q̇ = ṁ·cp·ΔT<br>'+
+         'Q̇ = 2000 kg/h × 4.18 kJ/kg·K × (70−25) K = 2000 × 4.18 × 45<br>'+
+         'Q̇ = 376 200 kJ/h → pasar a kW dividiendo por 3600<br>'+
+         '<b style="color:var(--accent)">Q̇ ≈ 104.5 kW</b>'},
+      {enunciado:'En un recipiente rígido se calienta 1 kg de aire (cv = 0.718 kJ/kg·K) desde 20°C hasta 150°C. Calcular Q y W.',
+       solucion:'Volumen constante → W = 0 (no hay expansión posible)<br>'+
+         'Primera ley: Q = ΔU = m·cv·ΔT = 1 × 0.718 × (150−20) = 1 × 0.718 × 130<br>'+
+         '<b style="color:var(--accent)">Q ≈ 93.3 kJ, W = 0</b>'},
+      {enunciado:'Una máquina de Carnot opera entre un foco caliente a 500 K y uno frío a 300 K. Si recibe 1000 kJ del foco caliente, calcular la eficiencia y el trabajo neto.',
+       solucion:'η = 1 − Tf/Tc = 1 − 300/500 = 1 − 0.6 = 0.4 → <b style="color:var(--accent)">η = 40%</b><br>'+
+         'W = η × Qc = 0.4 × 1000 kJ → <b style="color:var(--accent)">W = 400 kJ</b> (y se ceden 600 kJ al foco frío)'},
+      {enunciado:'Se transfieren 500 kJ de calor directamente (sin producir trabajo) desde un reservorio a 800 K hacia otro a 400 K. Calcular la generación de entropía del universo.',
+       solucion:'El foco caliente pierde entropía, el frío gana: ΔS_universo = ΔS_caliente + ΔS_frío<br>'+
+         'ΔS_caliente = −Q/Tc = −500/800 = −0.625 kJ/K<br>'+
+         'ΔS_frío = +Q/Tf = +500/400 = +1.25 kJ/K<br>'+
+         '<b style="color:var(--accent)">S_gen = −0.625 + 1.25 = 0.625 kJ/K</b> (positivo → proceso irreversible, como cualquier transferencia de calor con ΔT finito)'},
+      {enunciado:'Aire (γ=1.4) se comprime adiabática y reversiblemente desde P₁=1 atm, T₁=300 K hasta P₂=5 atm. Calcular la temperatura final T₂.',
+       solucion:'Adiabático reversible de gas ideal: T₂/T₁ = (P₂/P₁)^((γ−1)/γ)<br>'+
+         '(γ−1)/γ = 0.4/1.4 = 0.2857<br>'+
+         'T₂ = 300 × (5/1)^0.2857 = 300 × 1.584<br>'+
+         '<b style="color:var(--accent)">T₂ ≈ 475 K (≈ 202 °C)</b>'},
+    ]
+  },
+];
+function renderApuntes(){
+  const el=document.getElementById('apuntes-lista');
+  el.innerHTML=APUNTES.length?APUNTES.map(a=>
+    '<div class="row-item" onclick="abrirApunte(\''+a.id+'\')">'+
+      '<div class="row-icon" style="background:rgba(20,184,166,.15)">📝</div>'+
+      '<div class="row-main"><div class="row-title">'+esc(a.titulo)+'</div><div class="row-sub">'+a.secciones.length+' secciones</div></div>'+
+    '</div>'
+  ).join(''):'<div class="empty"><div class="empty-icon">📝</div><div class="empty-text">Todavía no hay apuntes cargados</div><div class="empty-sub">Se van agregando materia por materia</div></div>';
+}
+function abrirApunte(id){
+  const a=APUNTES.find(x=>x.id===id);
+  if(!a) return;
+  document.getElementById('apunte-titulo').textContent=a.titulo;
+  let html=a.secciones.map(s=>
+    '<div style="font-size:13px;font-weight:800;color:var(--accent);margin:16px 0 6px;text-transform:none;letter-spacing:0">'+esc(s.h)+'</div>'+
+    '<div>'+s.p+'</div>'
+  ).join('');
+  if(a.ejercicios&&a.ejercicios.length){
+    html+='<div style="font-size:14px;font-weight:800;color:var(--gold);margin:22px 0 10px;border-top:1px solid var(--border);padding-top:16px">📝 Ejercicios resueltos</div>';
+    html+=a.ejercicios.map((ej,i)=>
+      '<div class="card" style="margin-bottom:10px">'+
+        '<div style="font-weight:700;color:var(--text);margin-bottom:6px">Ejercicio '+(i+1)+'</div>'+
+        '<div style="margin-bottom:8px">'+ej.enunciado+'</div>'+
+        '<div style="font-size:12px;color:var(--text3);border-top:1px solid var(--border);padding-top:8px">'+ej.solucion+'</div>'+
+      '</div>'
+    ).join('');
+  }
+  document.getElementById('apunte-contenido').innerHTML=html;
+  abrirModal('apunte-detalle');
+}
+
+// ═══════════════════════════════════════════════════════════════
 // CALENDARIO Y NOTAS — parciales/finales, promedio con y sin aplazos
 // ═══════════════════════════════════════════════════════════════
 function renderCalendario(){
@@ -1359,6 +1512,7 @@ document.addEventListener('visibilitychange', ()=>{
 const PAGE_RENDER_FN={
   home:()=>renderHome(), materias:()=>renderMaterias(), calculadoras:()=>renderCalculadoras(),
   fichas:()=>renderFichas(), mas:()=>renderMas(), calendario:()=>renderCalendario(),
+  apuntes:()=>renderApuntes(),
 };
 function refrescarPaginaActual(){
   const fn=PAGE_RENDER_FN[_pagActual];
