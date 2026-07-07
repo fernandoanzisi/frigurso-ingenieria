@@ -1,0 +1,14 @@
+{
+  "name": "Frigurso Ingeniería",
+  "short_name": "Ingeniería",
+  "description": "Malla curricular, calculadoras y herramientas para estudiar Ingeniería Química (FIUBA)",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#06101a",
+  "theme_color": "#06101a",
+  "orientation": "any",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

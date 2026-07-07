@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Frigurso Ingeniería</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#06101a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+  :root{
+    --bg:#06101a;--bg2:#0a1c26;--bg3:#123240;--card:#0f2530;
+    --text:#eef6f5;--text2:#a8c3c1;--text3:#5b7d7a;
+    --accent:#14b8a6;--accent2:#0ea5e9;--gold:#f59e0b;
+    --green:#22c55e;--red:#f87171;--border:#1c3d45;
+    --shadow:0 2px 16px rgba(0,0,0,.5);
+    --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --mono:'SF Mono','Fira Code',monospace;
+    --sab:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{overscroll-behavior-y:contain}
+  body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100dvh}
+  button{font-family:var(--font);cursor:pointer;border:none;outline:none;background:none}
+  input,select,textarea{font-family:var(--font)}
+
+  .nav-bottom{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--bg2);border-top:1px solid var(--border);display:flex;height:calc(58px + var(--sab));padding-bottom:var(--sab)}
+  .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text3);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;transition:color .15s}
+  .nav-btn .ni{font-size:22px}.nav-btn.active{color:var(--accent)}.nav-btn:active{opacity:.7}
+
+  .header{position:sticky;top:0;z-index:50;background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 16px;display:flex;align-items:center;gap:10px}
+  .header-title{font-size:19px;font-weight:800;color:var(--text);flex:1}
+  .header-sub{font-size:11px;color:var(--text3)}
+  .btn-icon{width:38px;height:38px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+  .page{display:none;padding-bottom:calc(78px + var(--sab))}.page.active{display:block}
+
+  .section{padding:14px 14px 0}
+  .section-title{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:10px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow)}
+
+  .hero{margin:14px;border-radius:22px;padding:24px 20px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 30px rgba(20,184,166,.3);position:relative;overflow:hidden}
+  .hero::after{content:'';position:absolute;top:-40%;right:-20%;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.08)}
+  .hero-lbl{font-size:11px;font-weight:700;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:1px}
+  .hero-val{font-size:34px;font-weight:900;color:#fff;font-family:var(--mono);margin-top:4px;line-height:1.1}
+  .hero-sub{font-size:12px;color:rgba(255,255,255,.7);margin-top:6px}
+  .hero-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.2);margin-top:14px;overflow:hidden}
+  .hero-bar-fill{height:100%;border-radius:99px;background:#fff}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:14px}
+  .kpi-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 12px;text-align:center;transition:border-color .15s}
+  .kpi-box:active{border-color:var(--accent)}
+  .kpi-val{font-size:22px;font-weight:900;font-family:var(--mono)}
+  .kpi-lbl{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+
+  .row-item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+  .row-item:active{border-color:var(--accent)}
+  .row-item.static{cursor:default}
+  .row-item.static:active{border-color:var(--border)}
+  .row-item.locked{opacity:.45}
+  .row-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+  .row-main{flex:1;min-width:0}
+  .row-title{font-size:14px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row-sub{font-size:11px;color:var(--text3);margin-top:2px}
+  .row-amt{text-align:right;flex-shrink:0}
+  .row-amt-val{font-size:15px;font-weight:800;font-family:var(--mono)}
+  .row-amt-lbl{font-size:9px;color:var(--text3);margin-top:2px}
+
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+  .modal-overlay.open{opacity:1;pointer-events:all}
+  .modal{background:var(--bg2);border-radius:22px 22px 0 0;width:100%;max-width:520px;padding:20px 18px calc(30px + var(--sab));border-top:1px solid var(--border);transform:translateY(100%);transition:transform .25s;max-height:90dvh;overflow-y:auto}
+  .modal-overlay.open .modal{transform:translateY(0)}
+  .modal-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:16px}
+  .field-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+  .field-wrap{margin-bottom:14px}
+  .input{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:15px}
+  .input:focus{outline:none;border-color:var(--accent)}
+  select.input option{background:var(--bg3);color:var(--text)}
+  .btn-primary{width:100%;padding:15px;border-radius:14px;background:var(--accent);color:#04211d;font-size:15px;font-weight:800;margin-bottom:8px}
+  .btn-primary:active{opacity:.85}
+  .btn-ghost{width:100%;padding:13px;border-radius:14px;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:14px;font-weight:600;margin-bottom:8px}
+  .btn-danger{width:100%;padding:13px;border-radius:14px;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:var(--red);font-size:14px;font-weight:700;margin-bottom:8px}
+  .pill-sel{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  .pill{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer}
+  .pill.sel{background:rgba(20,184,166,.18);border-color:var(--accent);color:var(--accent);font-weight:700}
+
+  .fab{position:fixed;bottom:calc(68px + var(--sab));right:16px;z-index:80;width:56px;height:56px;border-radius:50%;background:var(--accent);color:#04211d;font-size:28px;box-shadow:0 4px 20px rgba(20,184,166,.45);display:flex;align-items:center;justify-content:center}
+  .fab:active{transform:scale(.93)}
+
+  .toast{position:fixed;bottom:calc(75px + var(--sab));left:50%;transform:translateX(-50%) translateY(20px);background:var(--accent);color:#04211d;padding:10px 20px;border-radius:99px;font-size:13px;font-weight:700;opacity:0;transition:all .25s;z-index:9999;white-space:nowrap;pointer-events:none;max-width:88vw;overflow:hidden;text-overflow:ellipsis}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .empty{text-align:center;padding:50px 20px}
+  .empty-icon{font-size:52px;margin-bottom:12px}
+  .empty-text{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .empty-sub{font-size:12px;color:var(--text3)}
+  .sep{height:1px;background:var(--border);margin:10px 0}
+
+  .admin-menu-btn{display:flex;align-items:center;gap:14px;width:100%;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 16px;text-align:left;cursor:pointer}
+  .admin-menu-btn:active{border-color:var(--accent)}
+  .admin-menu-icon{font-size:24px;flex-shrink:0}
+  .admin-menu-txt{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+  .admin-menu-titulo{font-size:14px;font-weight:700;color:var(--text)}
+  .admin-menu-sub{font-size:11px;color:var(--text3)}
+  .admin-menu-arrow{font-size:20px;color:var(--text3);flex-shrink:0}
+
+  .auth-screen{position:fixed;inset:0;background:linear-gradient(160deg,var(--bg),#0a2129 60%,#0a2b2e);z-index:500;display:flex;flex-direction:column;justify-content:center;padding:28px}
+  .auth-logo{font-size:52px;text-align:center;margin-bottom:6px}
+  .auth-title{font-size:24px;font-weight:900;text-align:center;color:var(--text);margin-bottom:6px}
+  .auth-sub{font-size:13px;text-align:center;color:var(--text3);margin-bottom:28px}
+  .auth-err{color:var(--red);font-size:12px;text-align:center;margin-bottom:10px;display:none}
+
+  .progress-bar{height:6px;border-radius:99px;background:var(--bg3);overflow:hidden}
+  .progress-fill{height:100%;border-radius:99px;transition:width .3s}
+
+  #ptr-indicator{position:fixed;top:8px;left:50%;transform:translate(-50%,-40px);opacity:0;z-index:150;width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:16px;transition:transform .25s,opacity .25s;pointer-events:none}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-logo">🧪</div>
+  <div class="auth-title">Frigurso Ingeniería</div>
+  <div class="auth-sub" id="auth-sub">Cargando...</div>
+
+  <div id="auth-crear" style="display:none">
+    <div class="field-wrap"><div class="field-label">Nombre</div><input type="text" class="input" id="ac-nombre" placeholder="Tu nombre"></div>
+    <div class="field-wrap"><div class="field-label">Contraseña</div><input type="password" class="input" id="ac-pass" placeholder="Mínimo 6 caracteres" autocomplete="new-password"></div>
+    <div class="field-wrap"><div class="field-label">Repetir contraseña</div><input type="password" class="input" id="ac-pass2" placeholder="Repetí la contraseña" autocomplete="new-password"></div>
+    <div class="auth-err" id="ac-err"></div>
+    <button class="btn-primary" onclick="crearCuenta()">Crear mi perfil</button>
+    <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px;line-height:1.5">Tus datos se guardan encriptados en este dispositivo. Si olvidás la contraseña, no hay forma de recuperarlos.</div>
+  </div>
+
+  <div id="auth-ingresar" style="display:none">
+    <div class="auth-sub" id="ai-nombre" style="margin-bottom:16px"></div>
+    <div class="field-wrap"><div class="field-label">Contraseña</div><input type="password" class="input" id="ai-pass" placeholder="Tu contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')ingresar()"></div>
+    <div class="auth-err" id="ai-err"></div>
+    <button class="btn-primary" onclick="ingresar()">Ingresar</button>
+    <button class="btn-ghost" id="btn-huella-login" style="display:none" onclick="ingresarConHuella()">👆 Usar huella / Face ID</button>
+    <button class="btn-ghost" onclick="olvideContrasena()" style="color:var(--red)">Olvidé mi contraseña</button>
+  </div>
+</div>
+
+<!-- SPLASH DE BIENVENIDA -->
+<div class="splash-screen" id="splash-screen" style="display:none;position:fixed;inset:0;z-index:600;background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);flex-direction:column;overflow:hidden">
+  <div style="position:absolute;top:0;left:0;right:0;height:48%;background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(20,184,166,.22) 0%, transparent 70%);pointer-events:none"></div>
+  <div style="text-align:center;padding:calc(26px + env(safe-area-inset-top,0px)) 26px 4px;position:relative">
+    <div style="font-size:26px;font-weight:900;color:var(--accent);letter-spacing:3px;line-height:1;text-shadow:0 0 40px rgba(20,184,166,.55)">FRIGURSO</div>
+    <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1.3px;margin-top:5px;text-transform:uppercase">Ingeniería · Ingeniería Química · FIUBA</div>
+  </div>
+  <div style="padding:0 20px;flex:1;overflow-y:auto">
+    <div class="card" style="display:flex;align-items:flex-start;gap:13px;margin-top:18px">
+      <div style="font-size:32px;line-height:1">🧪</div>
+      <div>
+        <div style="font-size:17px;font-weight:800;color:var(--text)" id="splash-saludo">¡Bienvenido!</div>
+        <div style="font-size:12px;color:var(--accent);font-weight:700;margin-top:4px">Tu compañero para Ingeniería Química.</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px;line-height:1.5">Malla curricular, calculadoras con pasos, fichas y calendario — todo en un solo lugar.</div>
+      </div>
+    </div>
+  </div>
+  <div style="height:1px;margin:16px 20px;background:linear-gradient(90deg,transparent,var(--border),transparent)"></div>
+  <div style="padding:0 20px calc(28px + env(safe-area-inset-bottom,0px))">
+    <button class="btn-primary" style="font-size:17px;padding:16px" onclick="entrarDesdeSplash()">INGRESAR →</button>
+  </div>
+</div>
+
+<div id="ptr-indicator">⬇️</div>
+
+<nav class="nav-bottom" id="navbar" style="display:none">
+  <button class="nav-btn active" id="nav-home" onclick="navGo('home',this)"><span class="ni">🏠</span><span>Inicio</span></button>
+  <button class="nav-btn" id="nav-materias" onclick="navGo('materias',this)"><span class="ni">📚</span><span>Materias</span></button>
+  <button class="nav-btn" id="nav-calculadoras" onclick="navGo('calculadoras',this)"><span class="ni">🧮</span><span>Calc</span></button>
+  <button class="nav-btn" id="nav-fichas" onclick="navGo('fichas',this)"><span class="ni">📖</span><span>Fichas</span></button>
+  <button class="nav-btn" id="nav-mas" onclick="navGo('mas',this)"><span class="ni">📋</span><span>Más</span></button>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="header">
+    <div style="flex:1">
+      <div class="header-title">🧪 Ingeniería</div>
+      <div class="header-sub" id="home-sub">Hola</div>
+    </div>
+    <button class="btn-icon" onclick="navGo('mas',document.getElementById('nav-mas'))">☰</button>
+  </div>
+  <div class="hero">
+    <div class="hero-lbl">Progreso de la carrera</div>
+    <div class="hero-val" id="home-progreso">0%</div>
+    <div class="hero-sub" id="home-progreso-sub">0 / 0 créditos</div>
+    <div class="hero-bar"><div class="hero-bar-fill" id="home-progreso-bar" style="width:0%"></div></div>
+  </div>
+  <div class="kpi-grid" id="home-kpis"></div>
+  <div class="section">
+    <div class="section-title">Próximas materias habilitadas</div>
+    <div id="home-habilitadas"></div>
+  </div>
+  <div class="section" style="margin-top:14px">
+    <div class="section-title">Próximos parciales/finales</div>
+    <div id="home-examenes"></div>
+  </div>
+</div>
+
+<!-- MATERIAS -->
+<div class="page" id="page-materias">
+  <div class="header"><div class="header-title">📚 Materias</div></div>
+  <div style="padding:14px" id="materias-lista"></div>
+</div>
+
+<!-- CALCULADORAS -->
+<div class="page" id="page-calculadoras">
+  <div class="header"><div class="header-title">🧮 Calculadoras</div></div>
+  <div style="padding:14px" id="calculadoras-lista"></div>
+</div>
+
+<!-- FICHAS -->
+<div class="page" id="page-fichas">
+  <div class="header"><div class="header-title">📖 Fichas</div></div>
+  <div style="padding:14px" id="fichas-lista"></div>
+</div>
+
+<!-- MAS -->
+<div class="page" id="page-mas">
+  <div class="header"><div class="header-title">📋 Más</div></div>
+  <div style="padding:14px;display:flex;flex-direction:column;gap:10px">
+    <button class="admin-menu-btn" onclick="navGo('calendario',document.getElementById('nav-mas'))">
+      <span class="admin-menu-icon">📅</span>
+      <span class="admin-menu-txt"><span class="admin-menu-titulo">Calendario y notas</span><span class="admin-menu-sub" id="mas-cal-sub">Parciales, finales y promedio</span></span>
+      <span class="admin-menu-arrow">›</span>
+    </button>
+    <div id="mas-backup-status" style="font-size:11px;text-align:center;margin-bottom:2px"></div>
+    <button class="admin-menu-btn" onclick="exportarDatos()">
+      <span class="admin-menu-icon">📦</span>
+      <span class="admin-menu-txt"><span class="admin-menu-titulo">Exportar backup</span><span class="admin-menu-sub">Descarga cifrada de todos tus datos</span></span>
+      <span class="admin-menu-arrow">›</span>
+    </button>
+    <label class="admin-menu-btn" style="cursor:pointer">
+      <span class="admin-menu-icon">📥</span>
+      <span class="admin-menu-txt"><span class="admin-menu-titulo">Importar backup</span><span class="admin-menu-sub">Reemplaza todos los datos actuales</span></span>
+      <span class="admin-menu-arrow">›</span>
+      <input type="file" accept=".figbak,.json" style="display:none" onchange="importarDatos(event)">
+    </label>
+    <button class="admin-menu-btn" id="btn-huella-toggle" onclick="toggleHuella()">
+      <span class="admin-menu-icon">👆</span>
+      <span class="admin-menu-txt"><span class="admin-menu-titulo" id="huella-toggle-titulo">Activar huella / Face ID</span><span class="admin-menu-sub">Atajo de acceso en este dispositivo</span></span>
+      <span class="admin-menu-arrow">›</span>
+    </button>
+    <button class="admin-menu-btn" onclick="forzarUpdate()">
+      <span class="admin-menu-icon">🔄</span>
+      <span class="admin-menu-txt"><span class="admin-menu-titulo">Actualizar app</span><span class="admin-menu-sub">Usar si no ves los últimos cambios</span></span>
+      <span class="admin-menu-arrow">›</span>
+    </button>
+    <button class="admin-menu-btn" onclick="cerrarSesion()">
+      <span class="admin-menu-icon">🔒</span>
+      <span class="admin-menu-txt"><span class="admin-menu-titulo" style="color:var(--red)">Bloquear app</span><span class="admin-menu-sub">Volver a pedir contraseña</span></span>
+      <span class="admin-menu-arrow">›</span>
+    </button>
+  </div>
+</div>
+
+<!-- CALENDARIO -->
+<div class="page" id="page-calendario">
+  <div class="header"><div style="display:flex;align-items:center;gap:8px;width:100%"><button class="btn-icon" onclick="navGo('mas',document.getElementById('nav-mas'))">←</button><div class="header-title">📅 Calendario y notas</div></div></div>
+  <div style="padding:14px" id="calendario-contenido"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CRIPTO — AES-256-GCM + PBKDF2 (mismo esquema probado en Frigurso Finanzas)
+// ═══════════════════════════════════════════════════════════════
+function _bufToB64(buf){ return btoa(String.fromCharCode(...new Uint8Array(buf))); }
+function _b64ToBuf(b64){ const bin=atob(b64); const buf=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i); return buf; }
+async function _deriveKey(pass, saltB64){
+  const salt=_b64ToBuf(saltB64);
+  const baseKey=await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name:'PBKDF2', salt, iterations:300000, hash:'SHA-256' },
+    baseKey, { name:'AES-GCM', length:256 }, true, ['encrypt','decrypt']
+  );
+}
+async function _encryptJSON(obj, key){
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const data=new TextEncoder().encode(JSON.stringify(obj));
+  const cipher=await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, data);
+  return { iv:_bufToB64(iv), data:_bufToB64(cipher) };
+}
+async function _decryptJSON(blob, key){
+  const iv=_b64ToBuf(blob.iv);
+  const data=_b64ToBuf(blob.data);
+  const plain=await crypto.subtle.decrypt({name:'AES-GCM', iv}, key, data);
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AUTH — perfil único (para uso personal)
+// ═══════════════════════════════════════════════════════════════
+let _key=null;
+let DB=null;
+let _fallidosPrevios=0;
+
+function _dbVacia(){
+  return {
+    perfil:{nombre:''},
+    materias:{},
+    examenes:[],
+    ultimoBackup:null,
+  };
+}
+async function save(){
+  if(!_key||!DB) return;
+  const blob=await _encryptJSON(DB, _key);
+  localStorage.setItem('fig_blob', JSON.stringify(blob));
+}
+function hideErrAuth(id){ document.getElementById(id).style.display='none'; }
+function showErrAuth(id,msg){ const el=document.getElementById(id); el.textContent=msg; el.style.display='block'; }
+
+function initAuth(){
+  const tieneBlobs=!!localStorage.getItem('fig_blob');
+  document.getElementById('auth-crear').style.display='none';
+  document.getElementById('auth-ingresar').style.display='none';
+  if(!tieneBlobs){
+    document.getElementById('auth-sub').textContent='Creá tu perfil para empezar';
+    document.getElementById('auth-crear').style.display='block';
+    return;
+  }
+  document.getElementById('auth-sub').textContent='Ingresá tu contraseña';
+  document.getElementById('ai-nombre').textContent=localStorage.getItem('fig_nombre')||'';
+  document.getElementById('auth-ingresar').style.display='block';
+  actualizarBotonHuella();
+}
+async function crearCuenta(){
+  hideErrAuth('ac-err');
+  const nombre=document.getElementById('ac-nombre').value.trim();
+  const pass=document.getElementById('ac-pass').value;
+  const pass2=document.getElementById('ac-pass2').value;
+  if(!nombre){ showErrAuth('ac-err','Ingresá tu nombre'); return; }
+  if(pass.length<6){ showErrAuth('ac-err','La contraseña debe tener al menos 6 caracteres'); return; }
+  if(pass!==pass2){ showErrAuth('ac-err','Las contraseñas no coinciden'); return; }
+  const salt=crypto.getRandomValues(new Uint8Array(16));
+  const saltB64=_bufToB64(salt);
+  const key=await _deriveKey(pass, saltB64);
+  DB=_dbVacia();
+  DB.perfil.nombre=nombre;
+  _key=key;
+  localStorage.setItem('fig_salt', saltB64);
+  localStorage.setItem('fig_nombre', nombre);
+  await save();
+  onDesbloqueado();
+}
+function _msEsperaPorIntentos(intentos){
+  if(intentos<3) return 0;
+  return Math.min(30000, 1000*Math.pow(2,intentos-3));
+}
+function _historialAcceso(){
+  try{ return JSON.parse(localStorage.getItem('fig_historial')||'[]'); }catch(e){ return []; }
+}
+function _registrarAcceso(tipo){
+  const hist=_historialAcceso();
+  hist.push({tipo,fecha:Date.now()});
+  localStorage.setItem('fig_historial', JSON.stringify(hist.slice(-30)));
+}
+function _contarFallidosDesdeUltimoExito(){
+  const hist=_historialAcceso();
+  let n=0;
+  for(let i=hist.length-1;i>=0;i--){
+    if(hist[i].tipo==='exito') break;
+    n++;
+  }
+  return n;
+}
+async function ingresar(){
+  hideErrAuth('ai-err');
+  const intentos=parseInt(localStorage.getItem('fig_intentos')||'0');
+  const espera=_msEsperaPorIntentos(intentos);
+  if(espera>0){ showErrAuth('ai-err','Demasiados intentos — esperá '+Math.ceil(espera/1000)+'s e intentá de nuevo'); return; }
+  const pass=document.getElementById('ai-pass').value;
+  if(!pass){ showErrAuth('ai-err','Ingresá tu contraseña'); return; }
+  try{
+    const saltB64=localStorage.getItem('fig_salt');
+    const key=await _deriveKey(pass, saltB64);
+    const blob=JSON.parse(localStorage.getItem('fig_blob'));
+    const data=await _decryptJSON(blob, key);
+    _key=key; DB=data;
+    localStorage.removeItem('fig_intentos');
+    _fallidosPrevios=_contarFallidosDesdeUltimoExito();
+    _registrarAcceso('exito');
+    onDesbloqueado();
+  }catch(e){
+    localStorage.setItem('fig_intentos', String(intentos+1));
+    _registrarAcceso('fallido');
+    showErrAuth('ai-err','Contraseña incorrecta');
+  }
+}
+async function registrarHuella(){
+  const challenge=crypto.getRandomValues(new Uint8Array(32));
+  return navigator.credentials.create({
+    publicKey:{
+      challenge,
+      rp:{name:'Frigurso Ingeniería'},
+      user:{id:crypto.getRandomValues(new Uint8Array(16)), name:(DB.perfil.nombre||'usuario'), displayName:(DB.perfil.nombre||'Usuario')},
+      pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],
+      authenticatorSelection:{authenticatorAttachment:'platform', userVerification:'required'},
+      timeout:60000,
+    }
+  });
+}
+async function verificarHuella(credIdB64){
+  const challenge=crypto.getRandomValues(new Uint8Array(32));
+  const credId=_b64ToBuf(credIdB64);
+  return navigator.credentials.get({
+    publicKey:{challenge, allowCredentials:[{id:credId,type:'public-key'}], userVerification:'required', timeout:60000}
+  });
+}
+async function toggleHuella(){
+  if(localStorage.getItem('fig_passkey')){
+    if(!confirm('¿Desactivar el acceso por huella en este dispositivo?')) return;
+    localStorage.removeItem('fig_passkey');
+    localStorage.removeItem('fig_unlock_shortcut');
+    actualizarBotonHuella();
+    toast('Huella desactivada');
+    return;
+  }
+  if(!window.PublicKeyCredential){ toast('Este dispositivo no soporta huella/Face ID'); return; }
+  try{
+    const cred=await registrarHuella();
+    const credIdB64=_bufToB64(new Uint8Array(cred.rawId));
+    const rawKey=await crypto.subtle.exportKey('raw', _key);
+    localStorage.setItem('fig_passkey', credIdB64);
+    localStorage.setItem('fig_unlock_shortcut', _bufToB64(new Uint8Array(rawKey)));
+    actualizarBotonHuella();
+    toast('👆 Huella activada');
+  }catch(e){ toast('No se pudo activar la huella'); }
+}
+async function ingresarConHuella(){
+  const credId=localStorage.getItem('fig_passkey');
+  if(!credId) return;
+  try{
+    await verificarHuella(credId);
+    const rawKeyB64=localStorage.getItem('fig_unlock_shortcut');
+    const rawKey=_b64ToBuf(rawKeyB64);
+    _key=await crypto.subtle.importKey('raw', rawKey, {name:'AES-GCM'}, true, ['encrypt','decrypt']);
+    const blob=JSON.parse(localStorage.getItem('fig_blob'));
+    DB=await _decryptJSON(blob, _key);
+    _fallidosPrevios=_contarFallidosDesdeUltimoExito();
+    _registrarAcceso('exito');
+    onDesbloqueado();
+  }catch(e){ _registrarAcceso('fallido'); toast('No se pudo verificar la huella'); }
+}
+function actualizarBotonHuella(){
+  const activo=!!localStorage.getItem('fig_passkey');
+  const t=document.getElementById('huella-toggle-titulo');
+  if(t) t.textContent=activo?'Desactivar huella / Face ID':'Activar huella / Face ID';
+  document.getElementById('btn-huella-login').style.display=activo?'':'none';
+}
+function olvideContrasena(){
+  if(!confirm('Si olvidaste tu contraseña no hay forma de recuperar tus datos. ¿Querés borrar todo y empezar de nuevo?')) return;
+  localStorage.removeItem('fig_blob');
+  localStorage.removeItem('fig_salt');
+  localStorage.removeItem('fig_nombre');
+  localStorage.removeItem('fig_passkey');
+  localStorage.removeItem('fig_unlock_shortcut');
+  localStorage.removeItem('fig_intentos');
+  toast('Se borraron los datos — creá un perfil nuevo');
+  initAuth();
+}
+function cerrarSesion(){
+  _key=null; DB=null;
+  document.getElementById('navbar').style.display='none';
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-home').classList.add('active');
+  document.getElementById('ai-pass').value='';
+  initAuth();
+  document.getElementById('auth-screen').style.display='flex';
+}
+function onDesbloqueado(){
+  document.getElementById('auth-screen').style.display='none';
+  mostrarSplashBienvenida();
+}
+function mostrarSplashBienvenida(){
+  const nombre=(DB.perfil&&DB.perfil.nombre)||'';
+  document.getElementById('splash-saludo').textContent=nombre?('¡Bienvenido, '+nombre+'!'):'¡Bienvenido!';
+  document.getElementById('splash-screen').style.display='flex';
+  _fallidosPrevios=0;
+}
+function entrarDesdeSplash(){
+  document.getElementById('splash-screen').style.display='none';
+  document.getElementById('navbar').style.display='flex';
+  actualizarBotonHuella();
+  renderHome();
+  history.replaceState({page:'home'},'','');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtFecha(s){ if(!s) return ''; const [y,m,d]=s.split('-'); return d+'/'+m+'/'+y; }
+function fechaHoy(){ const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`; }
+let _toastT;
+function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(_toastT); _toastT=setTimeout(()=>el.classList.remove('show'),2600); }
+function abrirModal(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  if(!_poppingState) history.pushState({modal:id},'','');
+}
+function cerrarModal(id){
+  document.getElementById('modal-'+id).classList.remove('open');
+  if(!_poppingState) history.back();
+}
+function cambiarModal(deId,aId){
+  document.getElementById('modal-'+deId).classList.remove('open');
+  document.getElementById('modal-'+aId).classList.add('open');
+  if(!_poppingState) history.replaceState({modal:aId},'','');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NAV + HISTORY API
+// ═══════════════════════════════════════════════════════════════
+let _pagActual='home';
+let _poppingState=false;
+function navGo(page,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.fab').forEach(f=>f.style.display='none');
+  document.getElementById('page-'+page).classList.add('active');
+  if(btn) btn.classList.add('active');
+  _pagActual=page;
+  if(page==='home') renderHome();
+  if(page==='materias') renderMaterias();
+  if(page==='calculadoras') renderCalculadoras();
+  if(page==='fichas') renderFichas();
+  if(page==='mas') renderMas();
+  if(page==='calendario') renderCalendario();
+  window.scrollTo(0,0);
+  if(!_poppingState&&page!=='home') history.pushState({page},'','');
+}
+window.addEventListener('popstate', e=>{
+  _poppingState=true;
+  const openModal=document.querySelector('.modal-overlay.open');
+  if(openModal){
+    openModal.classList.remove('open');
+  } else if(!e.state||e.state.page==='home'){
+    if(_pagActual!=='home') navGo('home', document.getElementById('nav-home'));
+  } else if(e.state.page&&e.state.page!==_pagActual){
+    navGo(e.state.page, document.getElementById('nav-'+e.state.page));
+  }
+  _poppingState=false;
+});
+
+// ═══════════════════════════════════════════════════════════════
+// HOME (placeholder — se completa en la tarea de malla curricular)
+// ═══════════════════════════════════════════════════════════════
+function renderHome(){
+  const nombre=(DB.perfil&&DB.perfil.nombre)||'';
+  document.getElementById('home-sub').textContent=nombre?('Hola, '+nombre):'Hola';
+}
+function renderMaterias(){}
+function renderCalculadoras(){}
+function renderFichas(){}
+function renderCalendario(){}
+function renderMas(){
+  renderBackupStatus();
+}
+function renderBackupStatus(){
+  const el=document.getElementById('mas-backup-status');
+  if(!el) return;
+  const ultimo=DB.ultimoBackup;
+  if(!ultimo){ el.innerHTML='<span style="color:var(--gold)">⚠️ Todavía no exportaste ningún backup</span>'; return; }
+  const dias=Math.floor((Date.now()-ultimo)/86400000);
+  el.innerHTML=dias>=14?'<span style="color:var(--gold)">⚠️ Hace '+dias+' días que no exportás un backup</span>':'<span style="color:var(--text3)">Último backup: hace '+(dias===0?'menos de un día':dias+' día'+(dias===1?'':'s'))+'</span>';
+}
+async function exportarDatos(){
+  const saltB64=localStorage.getItem('fig_salt');
+  const blob=await _encryptJSON(DB,_key);
+  const paquete={salt:saltB64, blob, exportadoEn:new Date().toISOString()};
+  const json=JSON.stringify(paquete);
+  const url=URL.createObjectURL(new Blob([json],{type:'application/json'}));
+  const a=document.createElement('a'); a.href=url;
+  a.download='frigurso-ingenieria-backup-'+fechaHoy()+'.figbak';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  DB.ultimoBackup=Date.now();
+  await save();
+  renderBackupStatus();
+  toast('📦 Backup exportado');
+}
+function importarDatos(e){
+  const file=e.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=async(ev)=>{
+    try{
+      const paquete=JSON.parse(ev.target.result);
+      if(!confirm('Esto va a reemplazar todos tus datos actuales por los del backup. ¿Continuar?')) return;
+      localStorage.setItem('fig_salt', paquete.salt);
+      localStorage.setItem('fig_blob', JSON.stringify(paquete.blob));
+      toast('✅ Backup importado — ingresá con tu contraseña');
+      cerrarSesion();
+    }catch(err){ toast('❌ Archivo inválido'); e.target.value=''; }
+  };
+  reader.readAsText(file);
+}
+function forzarUpdate(){
+  if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller){ toast('ℹ️ Sin actualizaciones pendientes'); return; }
+  navigator.serviceWorker.controller.postMessage({type:'SKIP_WAITING'});
+  navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload());
+  toast('🔄 Actualizando...');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BLOQUEO AUTOMÁTICO
+// ═══════════════════════════════════════════════════════════════
+let _inactivityTimer=null;
+const INACTIVITY_MS=3*60*1000;
+function _resetInactivityTimer(){
+  clearTimeout(_inactivityTimer);
+  if(!_key) return;
+  _inactivityTimer=setTimeout(()=>{ cerrarSesion(); toast('🔒 Se bloqueó por inactividad'); }, INACTIVITY_MS);
+}
+['click','touchstart','keydown','scroll'].forEach(ev=>document.addEventListener(ev,_resetInactivityTimer,{passive:true}));
+
+let _hiddenAt=null;
+document.addEventListener('visibilitychange', ()=>{
+  if(document.hidden){ _hiddenAt=Date.now(); }
+  else if(_hiddenAt&&_key&&(Date.now()-_hiddenAt)>5000){ cerrarSesion(); toast('🔒 Se bloqueó al salir de la app'); }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// PULL TO REFRESH
+// ═══════════════════════════════════════════════════════════════
+const PAGE_RENDER_FN={
+  home:()=>renderHome(), materias:()=>renderMaterias(), calculadoras:()=>renderCalculadoras(),
+  fichas:()=>renderFichas(), mas:()=>renderMas(), calendario:()=>renderCalendario(),
+};
+function refrescarPaginaActual(){
+  const fn=PAGE_RENDER_FN[_pagActual];
+  if(fn) fn();
+}
+const PTR_THRESHOLD=70, PTR_MAX=110;
+let _ptrStartY=null, _ptrPulling=false;
+function _ptrEl(){ return document.getElementById('ptr-indicator'); }
+document.addEventListener('touchstart', e=>{
+  if(document.querySelector('.modal-overlay.open')){ _ptrStartY=null; return; }
+  if((document.scrollingElement||document.documentElement).scrollTop>0){ _ptrStartY=null; return; }
+  _ptrStartY=e.touches[0].clientY;
+  _ptrPulling=false;
+}, {passive:true});
+document.addEventListener('touchmove', e=>{
+  if(_ptrStartY==null) return;
+  if((document.scrollingElement||document.documentElement).scrollTop>0){ _ptrStartY=null; return; }
+  const dy=e.touches[0].clientY-_ptrStartY;
+  if(dy<=0) return;
+  _ptrPulling=true;
+  const dist=Math.min(dy*0.5,PTR_MAX);
+  const el=_ptrEl();
+  el.style.transition='none';
+  el.style.transform='translate(-50%,'+(dist-40)+'px)';
+  el.style.opacity=String(Math.min(dist/PTR_THRESHOLD,1));
+  el.textContent=dist>=PTR_THRESHOLD?'⬆️':'⬇️';
+  if(e.cancelable) e.preventDefault();
+}, {passive:false});
+document.addEventListener('touchend', ()=>{
+  if(!_ptrPulling){ _ptrStartY=null; return; }
+  const el=_ptrEl();
+  el.style.transition='transform .25s,opacity .25s';
+  const m=/-?\d+\.?\d*/.exec(el.style.transform.split(',')[1]||'');
+  const dist=(m?parseFloat(m[0]):-40)+40;
+  if(dist>=PTR_THRESHOLD){
+    el.textContent='⏳';
+    el.style.transform='translate(-50%,'+PTR_THRESHOLD+'px)';
+    el.style.opacity='1';
+    setTimeout(()=>{
+      refrescarPaginaActual();
+      el.textContent='✅';
+      setTimeout(()=>{ el.style.transform='translate(-50%,-40px)'; el.style.opacity='0'; }, 400);
+    }, 350);
+  } else {
+    el.style.transform='translate(-50%,-40px)';
+    el.style.opacity='0';
+  }
+  _ptrStartY=null; _ptrPulling=false;
+}, {passive:true});
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+initAuth();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
