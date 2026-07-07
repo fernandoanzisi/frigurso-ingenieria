@@ -1925,6 +1925,255 @@ const APUNTES=[
       {titulo:'Planificación oficial de la cátedra (PDF)', descripcion:'Programa analítico completo, bibliografía y criterios de evaluación — FIUBA', url:'https://cms.fi.uba.ar/uploads/7645_97f9c76e38.pdf'},
     ]
   },
+  {
+    id:'algebraCBC',
+    materiaId:'cbc-algebraA',
+    titulo:'Álgebra A (CBC)',
+    secciones:[
+      {h:'1. Vectores en el plano y el espacio',
+       p:'Un <b>vector</b> en Rⁿ es una n-upla ordenada de números reales. Las operaciones básicas son suma (componente a componente) y multiplicación por escalar.<br><br>'+
+         '<b>Producto escalar (o interno usual)</b>: u·v = Σuᵢvᵢ. Propiedades: es bilineal, simétrico, y u·u=|u|²≥0.<br>'+
+         '<b>Norma</b>: |u| = √(u·u). <b>Distancia</b> entre dos puntos: d(P,Q)=|Q−P|.<br>'+
+         '<b>Ángulo entre vectores</b>: cos θ = (u·v)/(|u||v|). Si u·v=0 (y ninguno es el vector nulo), u y v son <b>ortogonales</b>.<br><br>'+
+         '<b>Proyección ortogonal</b> de u sobre v: proy_v(u) = ((u·v)/(v·v))·v — es la "sombra" de u sobre la dirección de v.<br><br>'+
+         '<b>Producto vectorial</b> (solo en R³): u×v es perpendicular a ambos, con |u×v|=|u||v|sen θ (área del paralelogramo que forman). Se calcula como el determinante simbólico de la matriz con filas (i,j,k), u, v.'},
+
+      {h:'2. Rectas y planos en el espacio',
+       p:'<b>Recta</b>: definida por un punto P₀ y una dirección v. Ecuación vectorial: (x,y,z)=P₀+t·v, t∈R. También se puede escribir en forma paramétrica (separando en x=x₀+t·v₁, etc.) o, si ningún vᵢ=0, en forma simétrica (x−x₀)/v₁=(y−y₀)/v₂=(z−z₀)/v₃.<br><br>'+
+         '<b>Plano</b>: definido por un punto P₀ y un vector normal n (perpendicular al plano). Ecuación implícita: n·(x−P₀)=0, es decir ax+by+cz=d con (a,b,c)=n.<br>'+
+         'También puede definirse por un punto y dos direcciones no paralelas u,w (ecuación vectorial (x,y,z)=P₀+s·u+t·w), en cuyo caso la normal es n=u×w.<br><br>'+
+         '<b>Distancia de un punto Q a un plano</b> ax+by+cz=d: dist = |aQ₁+bQ₂+cQ₃−d| / √(a²+b²+c²).<br>'+
+         '<b>Simétrico de un punto</b> respecto de un plano: el punto medio entre Q y su simétrico Q\' debe estar en el plano, y Q\'−Q debe ser paralelo a la normal — con esas dos condiciones se despeja Q\'.<br><br>'+
+         '<b>Intersección de dos planos</b> (no paralelos) es una recta: se resuelve el sistema de las dos ecuaciones implícitas (2 ecuaciones, 3 incógnitas → 1 parámetro libre).'},
+
+      {h:'3. Espacios vectoriales y subespacios',
+       p:'Un <b>espacio vectorial</b> es un conjunto con una suma y un producto por escalar que cumplen ciertos axiomas (asociatividad, existencia de neutro y opuesto, distributividad, etc.). El ejemplo más usado en este curso es Rⁿ, pero también son espacios vectoriales los polinomios de grado ≤n, las matrices de un tamaño dado, etc.<br><br>'+
+         'Un <b>subespacio</b> S⊆V es un subconjunto que es en sí mismo un espacio vectorial con las operaciones heredadas. Para verificarlo alcanza con 3 condiciones: (1) 0∈S, (2) u,v∈S ⟹ u+v∈S, (3) u∈S, k∈R ⟹ ku∈S.<br><br>'+
+         '<b>Combinación lineal</b> de v₁,...,vₖ: cualquier vector de la forma a₁v₁+...+aₖvₖ. El <b>subespacio generado</b> gen{v₁,...,vₖ} es el conjunto de todas sus combinaciones lineales.<br><br>'+
+         '<b>Independencia lineal</b>: v₁,...,vₖ son linealmente independientes si la única combinación lineal que da 0 es la trivial (todos los coeficientes =0). Si existe una combinación no trivial que da 0, son <b>linealmente dependientes</b> (uno de ellos es combinación de los demás).<br><br>'+
+         '<b>Base</b>: un conjunto de generadores de S que además es linealmente independiente. Todas las bases de un mismo subespacio tienen la misma cantidad de vectores: esa cantidad es la <b>dimensión</b> de S.<br><br>'+
+         '<b>Suma e intersección de subespacios</b>: S∩T es siempre un subespacio; S+T={s+t : s∈S,t∈T} también. Fórmula de las dimensiones: dim(S+T) = dim S + dim T − dim(S∩T). Cuando S∩T={0}, la suma se llama <b>suma directa</b> S⊕T, y dim(S⊕T)=dim S+dim T.'},
+
+      {h:'4. Matrices y sistemas de ecuaciones lineales',
+       p:'Las operaciones básicas con matrices son suma, producto por escalar, y producto de matrices (fila por columna, solo si las dimensiones son compatibles: A(m×n)·B(n×p)).<br><br>'+
+         'Un <b>sistema de ecuaciones lineales</b> Ax=b se resuelve escalonando la matriz ampliada [A|b] con operaciones elementales de fila (<b>método de Gauss-Jordan</b>): intercambiar filas, multiplicar una fila por un escalar no nulo, sumar a una fila un múltiplo de otra.<br><br>'+
+         'El <b>rango</b> de una matriz es la cantidad de filas (o columnas) linealmente independientes — se obtiene contando las filas no nulas después de escalonar.<br><br>'+
+         '<b>Teorema de Rouché-Frobenius</b>: dado el sistema Ax=b con A de m×n,<br>'+
+         '• Si rg(A) ≠ rg(A|b): el sistema es <b>incompatible</b> (no tiene solución).<br>'+
+         '• Si rg(A) = rg(A|b) = n (nº de incógnitas): <b>compatible determinado</b> (solución única).<br>'+
+         '• Si rg(A) = rg(A|b) &lt; n: <b>compatible indeterminado</b> (infinitas soluciones, con n−rg(A) parámetros libres).'},
+
+      {h:'5. Determinantes',
+       p:'El determinante es un número asociado a cada matriz cuadrada. Para 2×2: det[[a,b],[c,d]]=ad−bc. Para 3×3 se puede usar la regla de Sarrus o el desarrollo por cofactores (eligiendo cualquier fila o columna).<br><br>'+
+         'Propiedades clave: det(A·B)=det(A)·det(B); det(Aᵀ)=det(A); si una fila (o columna) es combinación lineal de otras, det=0; intercambiar dos filas cambia el signo; A es <b>inversible</b> si y solo si det(A)≠0.<br><br>'+
+         '<b>Matriz inversa</b> (cuando det≠0): A⁻¹ = (1/det A)·adj(A), donde adj(A) es la matriz adjunta (transpuesta de la matriz de cofactores). En la práctica, para sistemas grandes conviene calcularla escalonando [A|I] hasta llegar a [I|A⁻¹].'},
+
+      {h:'6. Transformaciones lineales',
+       p:'Una función T:V→W entre espacios vectoriales es una <b>transformación lineal</b> si T(u+v)=T(u)+T(v) y T(ku)=k·T(u) para todo u,v∈V, k∈R. Queda completamente determinada por sus valores en una base de V.<br><br>'+
+         '<b>Núcleo</b>: Nu(T)={v∈V : T(v)=0} — es un subespacio de V. T es <b>inyectiva</b> si y solo si Nu(T)={0}.<br>'+
+         '<b>Imagen</b>: Im(T)={T(v) : v∈V} — es un subespacio de W. T es <b>sobreyectiva</b> si Im(T)=W.<br><br>'+
+         '<b>Teorema de la dimensión</b>: dim(Nu(T)) + dim(Im(T)) = dim(V). Es la herramienta más usada para calcular la dimensión de uno de los dos subespacios conociendo el otro.'},
+
+      {h:'7. Matriz asociada a una transformación lineal y cambio de base',
+       p:'Fijadas una base B de V y una base C de W, cualquier transformación lineal T:V→W se representa mediante una matriz [T]_B^C: la columna j-ésima son las coordenadas, en la base C, de T aplicado al j-ésimo vector de la base B.<br><br>'+
+         'Así, calcular T(v) se reduce a multiplicar la matriz [T]_B^C por el vector de coordenadas de v en la base B, y luego interpretar el resultado como coordenadas en la base C.<br><br>'+
+         'La <b>matriz de cambio de base</b> (de B a B\') permite pasar coordenadas de un sistema a otro. La composición de transformaciones lineales corresponde al producto de sus matrices asociadas (en bases compatibles).'},
+
+      {h:'8. Números complejos',
+       p:'Un número complejo z=a+bi tiene parte real a y parte imaginaria b, con i²=−1. Se puede representar en el plano complejo como el punto (a,b).<br><br>'+
+         '<b>Módulo</b>: |z|=√(a²+b²). <b>Argumento</b> θ: el ángulo que forma con el eje real (arg principal ∈(−π,π]).<br><br>'+
+         '<b>Formas</b>: binómica z=a+bi; trigonométrica z=|z|(cos θ+i sen θ); exponencial z=|z|e^(iθ) (fórmula de Euler).<br><br>'+
+         '<b>Fórmula de De Moivre</b>: zⁿ = |z|ⁿ(cos(nθ)+i sen(nθ)) — clave para potencias y para hallar <b>raíces n-ésimas</b>: las n raíces de z tienen todas módulo |z|^(1/n) y argumentos (θ+2kπ)/n para k=0,1,...,n−1 (quedan distribuidas en un polígono regular de n lados sobre una circunferencia).'},
+
+      {h:'9. Polinomios',
+       p:'Un polinomio de grado n tiene a lo sumo n raíces (contando multiplicidad). <b>Teorema fundamental del álgebra</b>: todo polinomio de grado n≥1 con coeficientes complejos tiene exactamente n raíces en C (contando multiplicidad).<br><br>'+
+         '<b>Teorema del resto</b>: el resto de dividir P(x) por (x−a) es P(a). Por lo tanto, a es raíz de P si y solo si P(a)=0, y en ese caso P(x)=(x−a)·Q(x) (factorización), con Q de grado uno menos.<br><br>'+
+         'Si P tiene coeficientes reales y z=a+bi (b≠0) es raíz, entonces su conjugado z̄=a−bi también es raíz (las raíces complejas de polinomios reales vienen en pares conjugados).<br><br>'+
+         '<b>Interpolación de Lagrange</b>: dado un conjunto de n+1 puntos (xᵢ,yᵢ) con xᵢ distintos, existe un único polinomio de grado ≤n que pasa por todos ellos, construido como combinación de los polinomios base Lᵢ(x)=Π_{j≠i}(x−xⱼ)/(xᵢ−xⱼ).'},
+
+      {h:'10. Autovalores y autovectores',
+       p:'Dada una matriz cuadrada A, un escalar λ es <b>autovalor</b> de A si existe un vector v≠0 (el <b>autovector</b> asociado) tal que Av=λv — es decir, A actúa sobre v simplemente estirándolo/encogiéndolo por el factor λ, sin cambiar su dirección.<br><br>'+
+         'Los autovalores son las raíces del <b>polinomio característico</b> p(λ)=det(A−λI). Para cada autovalor, los autovectores asociados forman el <b>subespacio propio</b> Nu(A−λI) (sin contar el vector nulo).<br><br>'+
+         '<b>Diagonalización</b>: si A (de n×n) tiene n autovectores linealmente independientes, existe una matriz P (columnas = autovectores) tal que P⁻¹AP=D, con D diagonal (los autovalores). Esto simplifica muchísimo el cálculo de potencias Aᵏ=PDᵏP⁻¹.'},
+    ],
+    ejercicios:[
+      {enunciado:'Dados u=(1,2,−2) y v=(3,−1,0), calcular u·v, |u|, |v| y el ángulo entre ambos.',
+       solucion:'u·v = 1(3)+2(−1)+(−2)(0) = 3−2+0 = <b style="color:var(--accent)">1</b><br>'+
+         '|u| = √(1+4+4) = <b style="color:var(--accent)">3</b><br>'+
+         '|v| = √(9+1+0) = <b style="color:var(--accent)">√10 ≈ 3.162</b><br>'+
+         'cos θ = 1/(3·√10) ≈ 0.1054 → <b style="color:var(--accent)">θ ≈ 83.95°</b>'},
+      {enunciado:'Calcular el determinante y la matriz inversa de A=[[2,1],[5,3]].',
+       solucion:'det(A) = 2(3)−1(5) = 6−5 = <b style="color:var(--accent)">1</b><br>'+
+         'Como det=1, A⁻¹ = adj(A) = <b style="color:var(--accent)">[[3,−1],[−5,2]]</b> (se intercambian los elementos de la diagonal y se cambia el signo de los de fuera)'},
+      {enunciado:'Hallar todas las raíces cúbicas complejas de −1.',
+       solucion:'−1 en forma exponencial: |z|=1, θ=π. Las 3 raíces tienen módulo 1^(1/3)=1 y argumentos (π+2kπ)/3, k=0,1,2:<br>'+
+         'k=0: θ=π/3=60° → <b style="color:var(--accent)">z₀ = 1/2 + i(√3/2)</b><br>'+
+         'k=1: θ=π=180° → <b style="color:var(--accent)">z₁ = −1</b><br>'+
+         'k=2: θ=5π/3=300° → <b style="color:var(--accent)">z₂ = 1/2 − i(√3/2)</b>'},
+      {enunciado:'Hallar los autovalores y autovectores de A=[[4,1],[2,3]].',
+       solucion:'Polinomio característico: det(A−λI) = (4−λ)(3−λ)−2 = λ²−7λ+10 = 0<br>'+
+         '→ <b style="color:var(--accent)">λ₁=5, λ₂=2</b> (verificación: traza=4+3=7=λ₁+λ₂ ✓, det=12−2=10=λ₁λ₂ ✓)<br>'+
+         'Para λ=5: (4−5)x+y=0 → y=x → autovector <b style="color:var(--accent)">(1,1)</b><br>'+
+         'Para λ=2: (4−2)x+y=0 → y=−2x → autovector <b style="color:var(--accent)">(1,−2)</b>'},
+      {fuente:'Parcial real, Álgebra A (CBC), 1er cuatrimestre 2024',
+       enunciado:'Hallar todos los z∈C tales que z²(z³+8i) = (8z−20)(z³+8i).',
+       solucion:'Factorizando el factor común (z³+8i): (z³+8i)(z²−8z+20) = 0. Hay dos casos:<br><br>'+
+         '<b>Caso 1: z³=−8i.</b> En forma exponencial, −8i=8·e^(i·3π/2) (o 8·e^(−iπ/2)). Las 3 raíces cúbicas tienen módulo 2 y argumentos (−π/2+2kπ)/3:<br>'+
+         'k=0: <b style="color:var(--accent)">z=√3−i</b> &nbsp; k=1: <b style="color:var(--accent)">z=2i</b> &nbsp; k=2: <b style="color:var(--accent)">z=−√3−i</b><br><br>'+
+         '<b>Caso 2: z²−8z+20=0.</b> z=(8±√(64−80))/2=(8±4i)/2 → <b style="color:var(--accent)">z=4+2i, z=4−2i</b><br><br>'+
+         'En total, <b style="color:var(--accent)">5 soluciones</b>: {√3−i, 2i, −√3−i, 4+2i, 4−2i} (consistente con que el grado total de la ecuación es 5).'},
+      {fuente:'Parcial real, Álgebra A (CBC), 1er cuatrimestre 2024',
+       enunciado:'Sean Π₁: x−y−z=2, Π₂: 3x+y−z=8, Π₃: x−2y+z=4, y L=Π₁∩Π₂. Encontrar la intersección L∩Π₃.',
+       solucion:'Sumando Π₁+Π₂: 4x−2z=10 → z=2x−5. De Π₁: y=x−z−2=x−(2x−5)−2=−x+3.<br>'+
+         'L: (x,y,z) = (t, −t+3, 2t−5), t∈R.<br>'+
+         'Reemplazando en Π₃: t−2(−t+3)+(2t−5)=4 → t+2t−6+2t−5=4 → 5t−11=4 → t=3<br>'+
+         '<b style="color:var(--accent)">L∩Π₃ = (3, 0, 1)</b> (verificación: 3−0−1=2 ✓, 9+0−1=8 ✓, 3−0+1=4 ✓)'},
+      {fuente:'Parcial real, Álgebra A (CBC), 1er cuatrimestre 2024',
+       enunciado:'Sea Π el plano tal que el simétrico de (4,3,1) con respecto a Π es (2,3,−1). Hallar el simétrico de (−1,8,−1) con respecto a Π.',
+       solucion:'El punto medio M=(3,3,0) está en Π, y la normal es paralela a (2,3,−1)−(4,3,1)=(−2,0,−2), o simplificando, n=(1,0,1). Entonces Π: x+z=3.<br><br>'+
+         'Para hallar el simétrico de R=(−1,8,−1): la recta R+s(1,0,1) corta a Π en (−1+s)+(−1+s)=3 → s=2.5.<br>'+
+         'Pie de la perpendicular: M\'=(1.5, 8, 1.5). El simétrico es R\'=2M\'−R = (3+1, 16−8, 3+1) = <b style="color:var(--accent)">(4, 8, 4)</b>'},
+      {fuente:'Parcial real, Álgebra A (CBC), 1er cuatrimestre 2024',
+       enunciado:'Sean S={(2,0,1,−1),(4,−1,3,0)} y T={x∈R⁴ : ax₂+x₃+3x₄=0}. Hallar a,b∈R para que (b,−2,3,3)∈S∩T.',
+       solucion:'Para que (b,−2,3,3)∈T: a(−2)+3+3(3)=0 → −2a+12=0 → <b style="color:var(--accent)">a=6</b><br><br>'+
+         'Para que (b,−2,3,3)∈S=gen{(2,0,1,−1),(4,−1,3,0)}: buscamos λ,β tales que λ(2,0,1,−1)+β(4,−1,3,0)=(b,−2,3,3).<br>'+
+         'De la 2ª coordenada: −β=−2 → β=2. De la 4ª: −λ=3 → λ=−3. Verificando la 3ª: λ+3β=−3+6=3 ✓<br>'+
+         'De la 1ª coordenada: b=2λ+4β=2(−3)+4(2)=−6+8 → <b style="color:var(--accent)">b=2</b>'},
+    ],
+    recursos:[
+      {titulo:'Banco de parciales y finales reales (Álgebra para Ingeniería, CBC)', descripcion:'altillo.com — cientos de exámenes reales desde 1994, con resolución', url:'https://www.altillo.com/examenes/uba/cbc/algparaing/index.asp'},
+      {titulo:'Estructura del CBC — Álgebra (27)', descripcion:'Página oficial del CBC con la asignatura Álgebra para Ciencias Exactas e Ingeniería', url:'http://formularios.cbc.uba.ar/Algebra+(27)+para+Ciencias+Exactas+e+Ingenieria'},
+    ]
+  },
+  {
+    id:'algebralineal',
+    materiaId:'algebralineal',
+    titulo:'Álgebra Lineal',
+    secciones:[
+      {h:'1. Espacios vectoriales y subespacios',
+       p:'Repaso con más rigor que en el CBC: un <b>espacio vectorial</b> V es un conjunto con suma y producto por escalar que satisfacen los axiomas usuales. Ejemplos no triviales: Rⁿ, el espacio de polinomios Rₙ[x] de grado ≤n, el espacio de matrices Mₘₓₙ, el espacio de funciones continuas.<br><br>'+
+         'Un <b>subespacio</b> S⊆V se verifica con las 3 condiciones de siempre (contiene al 0, cerrado bajo suma, cerrado bajo producto por escalar). <b>Combinación lineal</b>, <b>subespacio generado</b>, <b>dependencia/independencia lineal</b>: mismas definiciones que en Álgebra A, pero ahora aplicadas a espacios más abstractos (polinomios, matrices), no solo a Rⁿ.<br><br>'+
+         '<b>Intersección, suma y suma directa de subespacios</b>: S∩T y S+T son subespacios; si S∩T={0}, la suma es directa (S⊕T) y todo vector de S+T se escribe de manera única como suma de un vector de S más uno de T. Fórmula de dimensiones: dim(S+T)=dim S+dim T−dim(S∩T).'},
+
+      {h:'2. Bases, dimensión y cambio de base',
+       p:'Una <b>base</b> de V es un conjunto de generadores linealmente independiente. La <b>dimensión</b> de V es la cantidad de vectores de cualquier base (todas tienen la misma cantidad).<br><br>'+
+         'Dado un vector v y una base B={b₁,...,bₙ}, las <b>coordenadas</b> de v en B son los únicos escalares (c₁,...,cₙ) tales que v=c₁b₁+...+cₙbₙ. Se anota (v)_B.<br><br>'+
+         'La <b>matriz de cambio de base</b> C_(B→B\') convierte coordenadas en B a coordenadas en B\': (v)_B\' = C_(B→B\')·(v)_B. Sus columnas son las coordenadas, en B\', de cada vector de B.'},
+
+      {h:'3. Subespacios fundamentales de una matriz y rango',
+       p:'Para una matriz A de m×n, hay 4 subespacios fundamentales asociados:<br>'+
+         '• <b>Núcleo</b> Nu(A) = {x∈Rⁿ : Ax=0} ⊆ Rⁿ<br>'+
+         '• <b>Imagen (espacio columna)</b> Im(A) = gen{columnas de A} ⊆ Rᵐ<br>'+
+         '• <b>Espacio fila</b> = gen{filas de A} ⊆ Rⁿ<br><br>'+
+         'El <b>rango</b> rg(A) = dim(Im(A)) = dim(espacio fila) (¡son siempre iguales, aunque A no sea cuadrada!). Por el teorema de la dimensión aplicado a la transformación x↦Ax: dim(Nu(A)) + rg(A) = n (número de columnas).<br><br>'+
+         'El rango se calcula escalonando A y contando las filas no nulas — coincide con el método usado para resolver sistemas de ecuaciones (Rouché-Frobenius).'},
+
+      {h:'4. Transformaciones lineales: núcleo, imagen y clasificación',
+       p:'T:V→W lineal. <b>Núcleo</b> Nu(T)⊆V, <b>imagen</b> Im(T)⊆W. <b>Teorema de la dimensión</b>: dim(Nu(T))+dim(Im(T))=dim(V).<br><br>'+
+         'T es <b>inyectiva</b> ⟺ Nu(T)={0} ⟺ dim(Im(T))=dim(V). T es <b>sobreyectiva</b> ⟺ Im(T)=W ⟺ dim(Im(T))=dim(W). Si dim(V)=dim(W), T es inyectiva ⟺ es sobreyectiva ⟺ es biyectiva (un resultado muy usado para ahorrar trabajo: alcanza con probar una sola de las dos condiciones).<br><br>'+
+         'Cuando T es biyectiva, existe la <b>transformación inversa</b> T⁻¹:W→V, también lineal.'},
+
+      {h:'5. Representación matricial, composición y cambio de base',
+       p:'Fijadas bases B (de V) y C (de W), toda T:V→W lineal se representa por una matriz [T]_B^C, cuya columna j es (T(bⱼ))_C. Entonces (T(v))_C = [T]_B^C · (v)_B.<br><br>'+
+         'La <b>composición</b> de transformaciones lineales corresponde al producto de sus matrices asociadas: [T∘S]=[T]·[S] (con las bases adecuadas). La <b>matriz inversa</b> de [T] (cuando existe) representa a T⁻¹.<br><br>'+
+         'Cuando se cambia de base en el dominio y/o el codominio, la matriz de T cambia según [T]_B\'^C\' = C_(C→C\') · [T]_B^C · C_(B\'→B).'},
+
+      {h:'6. Producto interno, norma y ortogonalidad',
+       p:'Un <b>producto interno</b> ⟨·,·⟩ en V es una forma bilineal simétrica definida positiva: ⟨v,v⟩≥0, y =0 solo si v=0 (en el caso complejo, es sesquilineal: conjugado-lineal en una de las entradas). El producto escalar usual en Rⁿ es el ejemplo más común, pero también se pueden definir productos internos "pesados" con una matriz simétrica definida positiva M: ⟨x,y⟩=yᵀMx.<br><br>'+
+         '<b>Norma inducida</b>: ‖v‖=√⟨v,v⟩. <b>Desigualdad de Cauchy-Schwarz</b>: |⟨u,v⟩| ≤ ‖u‖‖v‖ (con igualdad solo si son paralelos) — es la que garantiza que el "coseno del ángulo" ⟨u,v⟩/(‖u‖‖v‖) esté siempre entre −1 y 1.<br><br>'+
+         '<b>Ortogonalidad</b>: u⊥v si ⟨u,v⟩=0. El <b>complemento ortogonal</b> de un subespacio S es S^⊥={v∈V : ⟨v,s⟩=0 ∀s∈S}; siempre se cumple V=S⊕S^⊥.'},
+
+      {h:'7. Bases ortogonales/ortonormales y proceso de Gram-Schmidt',
+       p:'Una base es <b>ortogonal</b> si sus vectores son ortogonales entre sí de a pares, y <b>ortonormal</b> si además todos tienen norma 1. Trabajar con bases ortonormales simplifica muchísimo los cálculos: las coordenadas de v se obtienen directo como ⟨v,eᵢ⟩ (sin resolver sistemas).<br><br>'+
+         'El <b>proceso de Gram-Schmidt</b> convierte cualquier base {u₁,...,uₖ} en una base ortogonal {v₁,...,vₖ} del mismo subespacio:<br>'+
+         '<div style="text-align:center;font-weight:800;color:var(--accent);margin:8px 0">v₁=u₁ &nbsp;&nbsp; vⱼ = uⱼ − Σᵢ₌₁^(j−1) [(⟨uⱼ,vᵢ⟩)/(⟨vᵢ,vᵢ⟩)]·vᵢ</div>'+
+         'Es decir, a cada nuevo vector se le resta su proyección sobre todos los anteriores ya ortogonalizados. Normalizando (dividiendo cada vⱼ por su norma) se obtiene una base ortonormal.'},
+
+      {h:'8. Proyección ortogonal y mínimos cuadrados',
+       p:'Dado un subespacio S y un vector v∉S, la <b>proyección ortogonal</b> proy_S(v) es el vector de S más cercano a v (la "mejor aproximación"). Si {e₁,...,eₖ} es base ortonormal de S: proy_S(v)=Σ⟨v,eᵢ⟩eᵢ. El vector v−proy_S(v) es ortogonal a todo S.<br><br>'+
+         'El <b>método de mínimos cuadrados</b> usa esta idea para resolver sistemas Ax=b que no tienen solución exacta (más ecuaciones que incógnitas, b∉Im(A)): se busca x̂ que minimice ‖Ax−b‖, lo que equivale a que Ax̂ sea la proyección ortogonal de b sobre Im(A). Se resuelve con las <b>ecuaciones normales</b>: AᵀAx̂=Aᵀb.<br><br>'+
+         'El caso más común en la práctica es el <b>ajuste de una recta</b> y=mx+b a puntos experimentales, minimizando la suma de los cuadrados de los residuos verticales — es la base de toda regresión lineal.'},
+
+      {h:'9. Autovalores, autovectores y diagonalización',
+       p:'Igual definición que en Álgebra A (Av=λv), pero ahora con más herramientas: el <b>polinomio característico</b> p(λ)=det(A−λI) tiene grado n (para A de n×n). La <b>multiplicidad algebraica</b> de λ es su multiplicidad como raíz de p(λ); la <b>multiplicidad geométrica</b> es dim(Nu(A−λI)) (siempre ≤ la algebraica).<br><br>'+
+         'A es <b>diagonalizable</b> si y solo si, para cada autovalor, la multiplicidad geométrica coincide con la algebraica (equivalentemente, si existen n autovectores linealmente independientes). En ese caso A=PDP⁻¹, con P=[autovectores] y D=diag(autovalores).<br><br>'+
+         'Los <b>subespacios propios</b> (asociados a distintos autovalores) son siempre linealmente independientes entre sí, lo que facilita verificar la diagonalizabilidad.'},
+
+      {h:'10. Matrices simétricas, hermíticas y unitarias. Formas cuadráticas',
+       p:'Una matriz real A es <b>simétrica</b> si A=Aᵀ. El <b>teorema espectral</b> garantiza que toda matriz simétrica real es diagonalizable, y además se puede diagonalizar con una matriz <b>ortogonal</b> P (PᵀP=I, es decir P⁻¹=Pᵀ): A=PDPᵀ, con autovectores ortonormales.<br><br>'+
+         'En el caso complejo, el análogo de "simétrica" es <b>hermítica</b> (A=Aᴴ, la transpuesta conjugada), y el de "ortogonal" es <b>unitaria</b> (UᴴU=I). Toda matriz hermítica se diagonaliza con una matriz unitaria, y sus autovalores son siempre reales.<br><br>'+
+         'Una <b>forma cuadrática</b> Q(x)=xᵀAx (con A simétrica) se clasifica según el signo de los autovalores de A: <b>definida positiva</b> si todos son &gt;0 (Q(x)&gt;0 para todo x≠0), <b>definida negativa</b> si todos son &lt;0, e <b>indefinida</b> si hay de ambos signos. Es la base para clasificar puntos críticos en optimización con varias variables.'},
+
+      {h:'11. Descomposición en valores singulares (SVD)',
+       p:'Toda matriz A (de m×n, no necesariamente cuadrada) admite una descomposición A=UΣVᵀ, donde U (m×m) y V (n×n) son ortogonales, y Σ (m×n) es "diagonal" con los <b>valores singulares</b> σ₁≥σ₂≥...≥0 en la diagonal.<br><br>'+
+         'Los valores singulares son las raíces cuadradas de los autovalores (no negativos) de AᵀA (equivalentemente, de AAᵀ). Las columnas de V son los autovectores de AᵀA, y las de U los de AAᵀ.<br><br>'+
+         'La SVD generaliza la diagonalización a cualquier matriz (no solo cuadradas/simétricas), y es la base de aplicaciones modernas como compresión de imágenes, reducción de dimensionalidad (PCA) y sistemas de recomendación.'},
+
+      {h:'12. Ecuaciones diferenciales lineales de coeficientes constantes',
+       p:'Una ecuación diferencial lineal de 2do orden homogénea con coeficientes constantes tiene la forma y\'\'+a·y\'+b·y=0. Se resuelve planteando la <b>ecuación característica</b> r²+ar+b=0:<br>'+
+         '• Si tiene 2 raíces reales distintas r₁,r₂: solución general y=C₁e^(r₁x)+C₂e^(r₂x)<br>'+
+         '• Si tiene una raíz real doble r: y=(C₁+C₂x)e^(rx)<br>'+
+         '• Si tiene raíces complejas conjugadas α±βi: y=e^(αx)(C₁cos(βx)+C₂sen(βx))<br><br>'+
+         'Para la ecuación <b>no homogénea</b> y\'\'+ay\'+by=f(x), la solución general es y=y_homogénea+y_particular, donde y_particular se busca con el <b>método de coeficientes indeterminados</b> (probando una forma similar a f(x): polinomio si f es polinomio, exponencial si f es exponencial, etc.)'},
+
+      {h:'13. Sistemas de ecuaciones diferenciales lineales',
+       p:'Un sistema x\'=Ax (con x vector de funciones, A matriz constante) se resuelve diagonalizando A (cuando es posible): si A=PDP⁻¹, el cambio de variable y=P⁻¹x desacopla el sistema en n ecuaciones independientes yᵢ\'=λᵢyᵢ, cada una con solución yᵢ=Cᵢe^(λᵢt).<br><br>'+
+         'La solución general en las variables originales es x=Py, es decir, una combinación lineal de los términos vᵢe^(λᵢt), donde vᵢ son los autovectores de A. Este método conecta directamente los autovalores/autovectores (unidad 9) con la resolución de sistemas dinámicos lineales, una de las aplicaciones más importantes de toda la materia en ingeniería.'},
+    ],
+    ejercicios:[
+      {enunciado:'Aplicar el proceso de Gram-Schmidt a u₁=(1,1,0), u₂=(1,0,1) (producto interno usual de R³).',
+       solucion:'v₁ = u₁ = <b style="color:var(--accent)">(1,1,0)</b><br>'+
+         'v₂ = u₂ − [(u₂·v₁)/(v₁·v₁)]·v₁ = (1,0,1) − (1/2)(1,1,0) = <b style="color:var(--accent)">(0.5, −0.5, 1)</b><br>'+
+         'Verificación: v₁·v₂ = 0.5−0.5+0 = 0 ✓ (son ortogonales)'},
+      {enunciado:'Diagonalizar ortogonalmente la matriz simétrica A=[[2,1],[1,2]].',
+       solucion:'Polinomio característico: (2−λ)²−1=0 → λ=1 ó λ=3.<br>'+
+         'Para λ=3: (2−3)x+y=0 → y=x → autovector (1,1)/√2<br>'+
+         'Para λ=1: (2−1)x+y=0 → y=−x → autovector (1,−1)/√2<br>'+
+         '<b style="color:var(--accent)">A = PDPᵀ</b>, con P=[[1/√2,1/√2],[1/√2,−1/√2]] (columnas ortonormales) y D=diag(3,1). Como ambos autovalores son positivos, la forma cuadrática asociada es <b style="color:var(--accent)">definida positiva</b>.'},
+      {enunciado:'Resolver la ecuación diferencial y\'\'−5y\'+6y=0.',
+       solucion:'Ecuación característica: r²−5r+6=0 → (r−2)(r−3)=0 → r=2, r=3<br>'+
+         'Raíces reales distintas → <b style="color:var(--accent)">y = C₁e^(2x) + C₂e^(3x)</b>'},
+      {enunciado:'Sea T:R³→R³ dada por la matriz [[1,1,0],[0,1,1],[1,2,1]]. Hallar Nu(T) y, usando el teorema de la dimensión, dim(Im(T)).',
+       solucion:'Resolviendo Ax=0: x+y=0, y+z=0, x+2y+z=0 (esta última es combinación de las dos primeras: consistente).<br>'+
+         'De la 1ª: x=−y. De la 2ª: z=−y. Entonces Nu(T) = <b style="color:var(--accent)">gen{(−1,1,−1)}</b>, dim(Nu(T))=1.<br>'+
+         'Por el teorema de la dimensión: dim(Im(T)) = dim(R³)−dim(Nu(T)) = 3−1 = <b style="color:var(--accent)">2</b>'},
+      {fuente:'Parcial real, Álgebra II (FIUBA 61.08–81.02), 1er cuatrimestre 2022',
+       enunciado:'Sean S₁=gen{(1,0,2,1),(1,1,1,1)} y S₂=gen{(2,1,1,0),(1,0,1,0)} subespacios de R⁴. Construir un subespacio T de R⁴ tal que S₁⊕T=S₂⊕T=S₁+S₂. ¿Es único? Si la respuesta es negativa, construir otro.',
+       solucion:'dim(S₁)=2, dim(S₂)=2, y calculando el rango de los 4 generadores juntos, dim(S₁+S₂)=3. Por la fórmula de dimensiones, dim(S₁∩S₂)=2+2−3=1 (hay una recta común a ambos).<br><br>'+
+         'T debe ser una recta (dim 1) contenida en S₁+S₂ pero NO contenida en S₁ ni en S₂. Un ejemplo: sumando un generador de cada uno, T=gen{(1,0,2,1)+(2,1,1,0)} = <b style="color:var(--accent)">gen{(3,1,3,1)}</b> (se verifica que no está en S₁ ni en S₂).<br><br>'+
+         '<b>No es único</b>: cualquier otra recta dentro de S₁+S₂ que evite S₁ y S₂ también sirve, por ejemplo <b style="color:var(--accent)">T\'=gen{(2,1,2,1)}</b> (=generador de S₁ + generador de S₂ combinados distinto).'},
+      {fuente:'Parcial real, Álgebra II (FIUBA 61.08–81.02), 1er cuatrimestre 2022',
+       enunciado:'Sea T:R₂[x]→R³ con [T]_B^C=[[1,0,0],[1,0,0],[0,1,1]], donde B={1+x, 1−x, 1−x+x²} y C={(1,0,2),(0,1,−1),(1,0,1)}. Hallar el conjunto solución de T(p)=(6,6,6).',
+       solucion:'Si p tiene coordenadas (a,b,c) en B, T(p) tiene coordenadas [T]_B^C·(a,b,c) en C = (a+b+c, a, a+b+c).<br>'+
+         'Igualando a (6,6,6): de la 2ª coordenada, a=6. De la 1ª (y 3ª, igual): 6+b+c=6 → b+c=0, es decir c=−b (b libre).<br>'+
+         'Reconstruyendo p = a(1+x)+b(1−x)+c(1−x+x²) con a=6, c=−b: p = 6+6x−b·x².<br>'+
+         '<b style="color:var(--accent)">Conjunto solución: p(x) = 6+6x−t·x², t∈R</b> (infinitas soluciones, una familia de 1 parámetro)'},
+      {fuente:'Parcial real, Álgebra II (FIUBA 61.08–81.02), 1er cuatrimestre 2022',
+       enunciado:'Se considera el espacio euclídeo (R³,⟨·,·⟩) con producto interno ⟨x,y⟩=yᵀMx, M=[[3,0,2],[0,2,0],[2,0,3]]. Calcular la distancia del vector (3,3,1) al subespacio S={x∈R³ : x₁+x₂−x₃=0}.',
+       solucion:'S es el núcleo de a=(1,1,−1) (con el producto escalar usual). La dirección M-ortogonal a S es w=M⁻¹a.<br>'+
+         'M⁻¹ = [[0.6,0,−0.4],[0,0.5,0],[−0.4,0,0.6]] (verificable: M·M⁻¹=I) → w=M⁻¹a=(1, 0.5, −1)<br>'+
+         'La fórmula de distancia con producto interno pesado: dist(v,S) = |aᵀv| / √(aᵀM⁻¹a)<br>'+
+         'aᵀv = 1(3)+1(3)+(−1)(1) = 5. &nbsp; aᵀM⁻¹a = aᵀw = 1(1)+1(0.5)+(−1)(−1) = 2.5<br>'+
+         'dist = 5/√2.5 = <b style="color:var(--accent)">√10 ≈ 3.162</b>'},
+      {fuente:'Parcial real, Álgebra II (FIUBA 61.08–81.02), 1er cuatrimestre 2022',
+       enunciado:'Sea Σ la simetría de R³ con respecto al plano {x∈R³ : 2x₁+x₂−2x₃=0} en la dirección de la recta generada por (0,1,−1). Hallar la imagen por Σ del subespacio {x∈R³ : x₃=0}.',
+       solucion:'Para v=(x₁,x₂,0), se descompone v=p+t·d con d=(0,1,−1) y p en el plano: p=(x₁,x₂−t,t), y 2x₁+(x₂−t)−2t=0 → t=(2x₁+x₂)/3.<br>'+
+         'Σ(v) = v−2t·d = (x₁, x₂−2t, 2t) = (x₁, (x₂−4x₁)/3, (4x₁+2x₂)/3)<br>'+
+         'Llamando (u,v,w) a las coordenadas de la imagen: u=x₁, y despejando x₂ y reemplazando, se llega a la relación w=4u+2v.<br>'+
+         '<b style="color:var(--accent)">Σ({x₃=0}) = {(x,y,z)∈R³ : 4x+2y−z=0}</b> (un plano por el origen)'},
+      {fuente:'Parcial real, Álgebra II (FIUBA 61.08–81.02), 1er cuatrimestre 2022',
+       enunciado:'Usando la técnica de mínimos cuadrados, ajustar los datos (x,y): (−2,−4), (−1,−1), (0,2), (1,4), (2,5) mediante una recta y=mx+b.',
+       solucion:'Como Σx=0 (datos simétricos), las fórmulas se simplifican: m=Σxy/Σx², b=Σy/n<br>'+
+         'Σxy = (−2)(−4)+(−1)(−1)+0(2)+1(4)+2(5) = 8+1+0+4+10 = 23<br>'+
+         'Σx² = 4+1+0+1+4 = 10 &nbsp;&nbsp; Σy = −4−1+2+4+5 = 6<br>'+
+         'm = 23/10 = <b style="color:var(--accent)">2.3</b> &nbsp;&nbsp; b = 6/5 = <b style="color:var(--accent)">1.2</b><br>'+
+         'Recta de mejor ajuste: <b style="color:var(--accent)">y = 2.3x + 1.2</b>'},
+    ],
+    recursos:[
+      {titulo:'Banco de parciales y finales reales (Álgebra II, FIUBA)', descripcion:'altillo.com — exámenes reales de la Facultad de Ingeniería desde 1996', url:'https://www.altillo.com/examenes/uba/ingenieria/index.asp#algebra2'},
+      {titulo:'Planificación oficial de la cátedra (PDF)', descripcion:'Programa analítico completo — FIUBA, cátedra Giribet (código 8102/6108)', url:'https://cms.fi.uba.ar/uploads/8102_abc54c1706.pdf'},
+    ]
+  },
 ];
 function renderApuntes(){
   const el=document.getElementById('apuntes-lista');
