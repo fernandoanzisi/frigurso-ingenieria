@@ -214,6 +214,31 @@
   <div style="padding:14px" id="calculadoras-lista"></div>
 </div>
 
+<!-- CALCULADORA CIENTIFICA -->
+<div class="page" id="page-cientifica">
+  <div class="header"><div style="display:flex;align-items:center;gap:8px;width:100%"><button class="btn-icon" onclick="navGo('calculadoras',document.getElementById('nav-calculadoras'))">←</button><div class="header-title">🧪 Científica y Química</div></div></div>
+  <div style="padding:14px">
+    <div class="section-title">Calculadora científica</div>
+    <div class="card">
+      <div id="calc-display" style="font-family:var(--mono);font-size:22px;font-weight:800;text-align:right;color:var(--text);background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:10px;min-height:56px;word-break:break-all">0</div>
+      <div id="calc-modo" style="font-size:10px;color:var(--text3);text-align:right;margin-bottom:8px">DEG</div>
+      <div id="calc-botones" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px"></div>
+    </div>
+
+    <div class="section-title" style="margin-top:16px">⚗️ Peso molecular</div>
+    <div class="card">
+      <div class="field-wrap"><div class="field-label">Fórmula química</div><input type="text" class="input" id="pm-formula" placeholder="Ej: H2SO4, C6H12O6, Al2(SO4)3" oninput="calcularPesoMolecularUI()"></div>
+      <div id="pm-resultado" style="font-size:13px;line-height:1.7"></div>
+    </div>
+
+    <div class="section-title" style="margin-top:16px">🔬 Tabla periódica (118 elementos)</div>
+    <div class="card">
+      <input type="text" class="input" id="tp-busqueda" placeholder="Buscar por símbolo o nombre..." oninput="renderTablaPeriodica()" style="margin-bottom:10px">
+      <div id="tp-lista" style="max-height:340px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
 <!-- FICHAS -->
 <div class="page" id="page-fichas">
   <div class="header"><div class="header-title">📖 Fichas</div></div>
@@ -686,6 +711,7 @@ function navGo(page,btn){
   if(page==='home') renderHome();
   if(page==='materias') renderMaterias();
   if(page==='calculadoras') renderCalculadoras();
+  if(page==='cientifica') renderCientifica();
   if(page==='fichas') renderFichas();
   if(page==='mas') renderMas();
   if(page==='calendario') renderCalendario();
@@ -928,6 +954,7 @@ const CALCULADORAS_INFO=[
   {id:'intercambiador', icon:'♨️', nombre:'Intercambiador de calor', sub:'Método LMTD'},
   {id:'mccabe', icon:'🧫', nombre:'McCabe-Thiele', sub:'Etapas teóricas de destilación'},
   {id:'vapor', icon:'💧', nombre:'Presión de vapor y humedad', sub:'Antoine + psicrometría del agua'},
+  {id:'cientifica', icon:'🧪', nombre:'Científica y Química', sub:'Calculadora, peso molecular y tabla periódica'},
 ];
 function renderCalculadoras(){
   const el=document.getElementById('calculadoras-lista');
@@ -939,6 +966,7 @@ function renderCalculadoras(){
   ).join('');
 }
 function abrirCalculadora(id){
+  if(id==='cientifica'){ navGo('cientifica',document.getElementById('nav-calculadoras')); return; }
   if(id==='intercambiador') renderFlujoIntercambiadorPills();
   abrirModal(id);
 }
@@ -1152,6 +1180,340 @@ function calcVaporPsicrometria(){
   }
   el.innerHTML=html;
 }
+// ═══════════════════════════════════════════════════════════════
+// CIENTÍFICA Y QUÍMICA — calculadora científica, peso molecular, tabla periódica
+// ═══════════════════════════════════════════════════════════════
+const TABLA_PERIODICA=[
+  [1,'H','Hidrógeno',1.008],
+  [2,'He','Helio',4.0026022],
+  [3,'Li','Litio',6.94],
+  [4,'Be','Berilio',9.01218315],
+  [5,'B','Boro',10.81],
+  [6,'C','Carbono',12.011],
+  [7,'N','Nitrógeno',14.007],
+  [8,'O','Oxígeno',15.999],
+  [9,'F','Flúor',18.9984031636],
+  [10,'Ne','Neón',20.17976],
+  [11,'Na','Sodio',22.989769282],
+  [12,'Mg','Magnesio',24.305],
+  [13,'Al','Aluminio',26.98153857],
+  [14,'Si','Silicio',28.085],
+  [15,'P','Fósforo',30.9737619985],
+  [16,'S','Azufre',32.06],
+  [17,'Cl','Cloro',35.45],
+  [18,'Ar','Argón',39.9481],
+  [19,'K','Potasio',39.09831],
+  [20,'Ca','Calcio',40.0784],
+  [21,'Sc','Escandio',44.9559085],
+  [22,'Ti','Titanio',47.8671],
+  [23,'V','Vanadio',50.94151],
+  [24,'Cr','Cromo',51.99616],
+  [25,'Mn','Manganeso',54.9380443],
+  [26,'Fe','Hierro',55.8452],
+  [27,'Co','Cobalto',58.9331944],
+  [28,'Ni','Níquel',58.69344],
+  [29,'Cu','Cobre',63.5463],
+  [30,'Zn','Zinc',65.382],
+  [31,'Ga','Galio',69.7231],
+  [32,'Ge','Germanio',72.6308],
+  [33,'As','Arsénico',74.9215956],
+  [34,'Se','Selenio',78.9718],
+  [35,'Br','Bromo',79.904],
+  [36,'Kr','Kriptón',83.7982],
+  [37,'Rb','Rubidio',85.46783],
+  [38,'Sr','Estroncio',87.621],
+  [39,'Y','Itrio',88.905842],
+  [40,'Zr','Zirconio',91.2242],
+  [41,'Nb','Niobio',92.906372],
+  [42,'Mo','Molibdeno',95.951],
+  [43,'Tc','Tecnecio',98],
+  [44,'Ru','Rutenio',101.072],
+  [45,'Rh','Rodio',102.905502],
+  [46,'Pd','Paladio',106.421],
+  [47,'Ag','Plata',107.86822],
+  [48,'Cd','Cadmio',112.4144],
+  [49,'In','Indio',114.8181],
+  [50,'Sn','Estaño',118.7107],
+  [51,'Sb','Antimonio',121.7601],
+  [52,'Te','Telurio',127.603],
+  [53,'I','Yodo',126.904473],
+  [54,'Xe','Xenón',131.2936],
+  [55,'Cs','Cesio',132.905451966],
+  [56,'Ba','Bario',137.3277],
+  [57,'La','Lantano',138.905477],
+  [58,'Ce','Cerio',140.1161],
+  [59,'Pr','Praseodimio',140.907662],
+  [60,'Nd','Neodimio',144.2423],
+  [61,'Pm','Prometio',145],
+  [62,'Sm','Samario',150.362],
+  [63,'Eu','Europio',151.9641],
+  [64,'Gd','Gadolinio',157.253],
+  [65,'Tb','Terbio',158.925352],
+  [66,'Dy','Disprosio',162.5001],
+  [67,'Ho','Holmio',164.930332],
+  [68,'Er','Erbio',167.2593],
+  [69,'Tm','Tulio',168.934222],
+  [70,'Yb','Iterbio',173.0451],
+  [71,'Lu','Lutecio',174.96681],
+  [72,'Hf','Hafnio',178.492],
+  [73,'Ta','Tántalo',180.947882],
+  [74,'W','Wolframio',183.841],
+  [75,'Re','Renio',186.2071],
+  [76,'Os','Osmio',190.233],
+  [77,'Ir','Iridio',192.2173],
+  [78,'Pt','Platino',195.0849],
+  [79,'Au','Oro',196.9665695],
+  [80,'Hg','Mercurio',200.5923],
+  [81,'Tl','Talio',204.38],
+  [82,'Pb','Plomo',207.21],
+  [83,'Bi','Bismuto',208.980401],
+  [84,'Po','Polonio',209],
+  [85,'At','Astato',210],
+  [86,'Rn','Radón',222],
+  [87,'Fr','Francio',223],
+  [88,'Ra','Radio',226],
+  [89,'Ac','Actinio',227],
+  [90,'Th','Torio',232.03774],
+  [91,'Pa','Protactinio',231.035882],
+  [92,'U','Uranio',238.028913],
+  [93,'Np','Neptunio',237],
+  [94,'Pu','Plutonio',244],
+  [95,'Am','Americio',243],
+  [96,'Cm','Curio',247],
+  [97,'Bk','Berkelio',247],
+  [98,'Cf','Californio',251],
+  [99,'Es','Einstenio',252],
+  [100,'Fm','Fermio',257],
+  [101,'Md','Mendelevio',258],
+  [102,'No','Nobelio',259],
+  [103,'Lr','Lawrencio',266],
+  [104,'Rf','Rutherfordio',267],
+  [105,'Db','Dubnio',268],
+  [106,'Sg','Seaborgio',269],
+  [107,'Bh','Bohrio',270],
+  [108,'Hs','Hasio',269],
+  [109,'Mt','Meitnerio',278],
+  [110,'Ds','Darmstadtio',281],
+  [111,'Rg','Roentgenio',282],
+  [112,'Cn','Copernicio',285],
+  [113,'Nh','Nihonio',286],
+  [114,'Fl','Flerovio',289],
+  [115,'Mc','Moscovio',289],
+  [116,'Lv','Livermorio',293],
+  [117,'Ts','Teneso',294],
+  [118,'Og','Oganesón',294]
+];
+function buscarElementoPorSimbolo(simbolo){ return TABLA_PERIODICA.find(e=>e[1]===simbolo); }
+
+// ── Calculadora científica (parser propio, sin eval) ──
+let _calcExpr='';
+let _calcModoGrados=true;
+function evaluarExpresionCientifica(expr, modoGrados){
+  let i=0;
+  function consumeSpaces(){ while(expr[i]===' ') i++; }
+  function parseExpression(){
+    consumeSpaces();
+    let left=parseTerm();
+    for(;;){
+      consumeSpaces();
+      if(expr[i]==='+'){ i++; left+=parseTerm(); }
+      else if(expr[i]==='-'){ i++; left-=parseTerm(); }
+      else break;
+    }
+    return left;
+  }
+  function parseTerm(){
+    consumeSpaces();
+    let left=parseUnary();
+    for(;;){
+      consumeSpaces();
+      if(expr[i]==='*'){ i++; left*=parseUnary(); }
+      else if(expr[i]==='/'){ i++; left/=parseUnary(); }
+      else break;
+    }
+    return left;
+  }
+  function parseUnary(){
+    consumeSpaces();
+    if(expr[i]==='-'){ i++; return -parseUnary(); }
+    if(expr[i]==='+'){ i++; return parseUnary(); }
+    return parsePower();
+  }
+  function parsePower(){
+    consumeSpaces();
+    const base=parseAtom();
+    consumeSpaces();
+    if(expr[i]==='^'){ i++; const exp=parseUnary(); return Math.pow(base,exp); }
+    return base;
+  }
+  function aplicarFuncion(f,arg){
+    const toRad=v=>modoGrados?v*Math.PI/180:v;
+    const toDeg=v=>modoGrados?v*180/Math.PI:v;
+    switch(f){
+      case 'asin': return toDeg(Math.asin(arg));
+      case 'acos': return toDeg(Math.acos(arg));
+      case 'atan': return toDeg(Math.atan(arg));
+      case 'sin': return Math.sin(toRad(arg));
+      case 'cos': return Math.cos(toRad(arg));
+      case 'tan': return Math.tan(toRad(arg));
+      case 'log': return Math.log10(arg);
+      case 'ln': return Math.log(arg);
+      case 'sqrt': return Math.sqrt(arg);
+      case 'abs': return Math.abs(arg);
+    }
+  }
+  function parseAtom(){
+    consumeSpaces();
+    if(expr[i]==='('){
+      i++;
+      const v=parseExpression();
+      consumeSpaces();
+      if(expr[i]===')') i++;
+      return v;
+    }
+    const funcs=['asin','acos','atan','sin','cos','tan','log','ln','sqrt','abs'];
+    for(const f of funcs){
+      if(expr.slice(i,i+f.length)===f){
+        i+=f.length;
+        consumeSpaces();
+        let arg;
+        if(expr[i]==='('){ i++; arg=parseExpression(); consumeSpaces(); if(expr[i]===')') i++; }
+        else arg=parseUnary();
+        return aplicarFuncion(f,arg);
+      }
+    }
+    if(expr.slice(i,i+2)==='pi'){ i+=2; return Math.PI; }
+    if(expr[i]==='e' && !/[a-zA-Z]/.test(expr[i+1]||'')){ i+=1; return Math.E; }
+    const start=i;
+    while(i<expr.length && /[0-9.]/.test(expr[i])) i++;
+    if(start===i) throw new Error('Expresión inválida');
+    return parseFloat(expr.slice(start,i));
+  }
+  const result=parseExpression();
+  consumeSpaces();
+  if(i<expr.length) throw new Error('Expresión inválida');
+  return result;
+}
+const CALC_BOTONES=[
+  ['(','('],[')',')'],['C','clear'],['⌫','back'],['DEG/RAD','toggle'],
+  ['sin','sin('],['cos','cos('],['tan','tan('],['^','^'],['√','sqrt('],
+  ['log','log('],['ln','ln('],['π','pi'],['e','e'],['÷','/'],
+  ['7','7'],['8','8'],['9','9'],['×','*'],['abs','abs('],
+  ['4','4'],['5','5'],['6','6'],['−','-'],['C²','^2'],
+  ['1','1'],['2','2'],['3','3'],['+','+'],['%','/100'],
+  ['0','0'],['.','.'],['=','='],
+];
+function renderCalcBotones(){
+  document.getElementById('calc-botones').innerHTML=CALC_BOTONES.map(([label,token])=>
+    '<button type="button" class="btn-ghost" style="margin-bottom:0;padding:12px 4px;font-size:13px" onclick="calcInput(\''+token.replace(/'/g,"\\'")+'\')">'+esc(label)+'</button>'
+  ).join('');
+  document.getElementById('calc-modo').textContent=_calcModoGrados?'DEG':'RAD';
+}
+function calcInput(token){
+  if(token==='clear'){ _calcExpr=''; }
+  else if(token==='back'){ _calcExpr=_calcExpr.slice(0,-1); }
+  else if(token==='toggle'){ _calcModoGrados=!_calcModoGrados; renderCalcBotones(); }
+  else if(token==='='){ calcEvaluar(); return; }
+  else { _calcExpr+=token; }
+  document.getElementById('calc-display').textContent=_calcExpr||'0';
+}
+function calcEvaluar(){
+  try{
+    const resultado=evaluarExpresionCientifica(_calcExpr, _calcModoGrados);
+    if(!isFinite(resultado)) throw new Error('No numérico');
+    const redondeado=Math.round(resultado*1e10)/1e10;
+    document.getElementById('calc-display').textContent=String(redondeado);
+    _calcExpr=String(redondeado);
+  }catch(e){
+    document.getElementById('calc-display').textContent='Error';
+    _calcExpr='';
+  }
+}
+
+// ── Peso molecular (parser de fórmulas químicas) ──
+function parsearFormulaQuimica(formula){
+  let i=0;
+  function parseGrupo(){
+    const counts={};
+    while(i<formula.length && formula[i]!==')'){
+      if(formula[i]==='('){
+        i++;
+        const sub=parseGrupo();
+        if(formula[i]===')') i++;
+        let numStr='';
+        while(i<formula.length && /[0-9]/.test(formula[i])){ numStr+=formula[i]; i++; }
+        const mult=numStr?parseInt(numStr):1;
+        for(const el in sub) counts[el]=(counts[el]||0)+sub[el]*mult;
+      } else if(/[A-Z]/.test(formula[i])){
+        let simbolo=formula[i]; i++;
+        while(i<formula.length && /[a-z]/.test(formula[i])){ simbolo+=formula[i]; i++; }
+        let numStr='';
+        while(i<formula.length && /[0-9]/.test(formula[i])){ numStr+=formula[i]; i++; }
+        const cant=numStr?parseInt(numStr):1;
+        counts[simbolo]=(counts[simbolo]||0)+cant;
+      } else {
+        i++;
+      }
+    }
+    return counts;
+  }
+  return parseGrupo();
+}
+function calcularPesoMolecular(formula){
+  const limpio=formula.replace(/\s+/g,'');
+  if(!limpio) return null;
+  const counts=parsearFormulaQuimica(limpio);
+  if(!Object.keys(counts).length) return {error:'No se reconoció ningún elemento en la fórmula'};
+  let total=0;
+  const detalle=[];
+  for(const simbolo in counts){
+    const el=buscarElementoPorSimbolo(simbolo);
+    if(!el) return {error:'No reconozco el símbolo "'+simbolo+'"'};
+    const subtotal=el[3]*counts[simbolo];
+    total+=subtotal;
+    detalle.push({simbolo, nombre:el[2], cantidad:counts[simbolo], masaAtomica:el[3], subtotal});
+  }
+  return {total, detalle};
+}
+function calcularPesoMolecularUI(){
+  const formula=document.getElementById('pm-formula').value;
+  const el=document.getElementById('pm-resultado');
+  const resultado=calcularPesoMolecular(formula);
+  if(!resultado){ el.innerHTML=''; return; }
+  if(resultado.error){ el.innerHTML='<div style="color:var(--red)">⚠️ '+esc(resultado.error)+'</div>'; return; }
+  el.innerHTML=
+    '<div style="font-size:22px;font-weight:900;font-family:var(--mono);color:var(--accent);margin-bottom:8px">'+resultado.total.toFixed(3)+' g/mol</div>'+
+    resultado.detalle.map(d=>
+      '<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)">'+
+        '<span>'+esc(d.simbolo)+' ('+esc(d.nombre)+') × '+d.cantidad+'</span>'+
+        '<span style="font-family:var(--mono)">'+d.subtotal.toFixed(3)+'</span>'+
+      '</div>'
+    ).join('');
+}
+
+// ── Tabla periódica (búsqueda) ──
+function renderTablaPeriodica(){
+  const q=(document.getElementById('tp-busqueda').value||'').trim().toLowerCase();
+  const el=document.getElementById('tp-lista');
+  const filtrados=TABLA_PERIODICA.filter(e=>!q||e[1].toLowerCase().includes(q)||e[2].toLowerCase().includes(q));
+  el.innerHTML=filtrados.length?filtrados.map(e=>
+    '<div class="row-item static" style="margin-bottom:6px">'+
+      '<div class="row-icon" style="background:rgba(20,184,166,.15);font-size:14px;font-weight:800">'+esc(e[1])+'</div>'+
+      '<div class="row-main"><div class="row-title">'+esc(e[2])+'</div><div class="row-sub">Z='+e[0]+'</div></div>'+
+      '<div class="row-amt"><div class="row-amt-val">'+e[3]+'</div><div class="row-amt-lbl">g/mol</div></div>'+
+    '</div>'
+  ).join(''):'<div style="text-align:center;color:var(--text3);font-size:12px;padding:10px 0">Sin resultados</div>';
+}
+function renderCientifica(){
+  _calcExpr='';
+  document.getElementById('calc-display').textContent='0';
+  renderCalcBotones();
+  document.getElementById('pm-formula').value='';
+  document.getElementById('pm-resultado').innerHTML='';
+  document.getElementById('tp-busqueda').value='';
+  renderTablaPeriodica();
+}
+
 // ═══════════════════════════════════════════════════════════════
 // FICHAS DE FÓRMULAS — resumen de "chuleta de examen" por tema
 // ═══════════════════════════════════════════════════════════════
@@ -1581,7 +1943,7 @@ document.addEventListener('visibilitychange', ()=>{
 const PAGE_RENDER_FN={
   home:()=>renderHome(), materias:()=>renderMaterias(), calculadoras:()=>renderCalculadoras(),
   fichas:()=>renderFichas(), mas:()=>renderMas(), calendario:()=>renderCalendario(),
-  apuntes:()=>renderApuntes(),
+  apuntes:()=>renderApuntes(), cientifica:()=>renderCientifica(),
 };
 function refrescarPaginaActual(){
   const fn=PAGE_RENDER_FN[_pagActual];
