@@ -267,7 +267,7 @@
     </button>
     <label class="admin-menu-btn" style="cursor:pointer">
       <span class="admin-menu-icon">📥</span>
-      <span class="admin-menu-txt"><span class="admin-menu-titulo">Importar backup</span><span class="admin-menu-sub">Reemplaza todos los datos actuales</span></span>
+      <span class="admin-menu-txt"><span class="admin-menu-titulo">Sumar backup</span><span class="admin-menu-sub">Trae los datos de otro dispositivo, sin borrar los tuyos</span></span>
       <span class="admin-menu-arrow">›</span>
       <input type="file" accept=".figbak,.json" style="display:none" onchange="importarDatos(event)">
     </label>
@@ -301,6 +301,18 @@
     <div class="modal-title" id="apunte-titulo">Apunte</div>
     <div id="apunte-contenido" style="font-size:13px;line-height:1.7;color:var(--text2)"></div>
     <button class="btn-ghost" onclick="cerrarModal('apunte-detalle')" style="margin-top:14px">Cerrar</button>
+  </div>
+</div>
+
+<!-- MODAL: IMPORTAR BACKUP (fusión) -->
+<div class="modal-overlay" id="modal-importar-backup" onclick="if(event.target===this)cerrarModal('importar-backup')">
+  <div class="modal">
+    <div class="modal-title">📥 Sumar backup</div>
+    <div class="admin-menu-sub" style="display:block;margin-bottom:12px">Este backup se va a sumar a lo que ya tenés en este dispositivo — no se borra nada existente.</div>
+    <div class="field-wrap"><div class="field-label">Contraseña con la que se exportó ese backup</div><input type="password" class="input" id="imp-pass" placeholder="Contraseña"></div>
+    <div id="imp-err" style="display:none;color:#f87171;font-size:13px;margin:-8px 0 12px"></div>
+    <button class="btn-primary" onclick="confirmarImportarBackup()">Sumar datos</button>
+    <button class="btn-ghost" onclick="cerrarModal('importar-backup')">Cancelar</button>
   </div>
 </div>
 
@@ -2335,21 +2347,71 @@ async function exportarDatos(){
   renderBackupStatus();
   toast('📦 Backup exportado');
 }
+// Fusiona dbEntrante DENTRO de dbActual: agrega lo nuevo, nunca borra ni pisa lo que ya existe.
+// Devuelve la cantidad de registros nuevos que se sumaron.
+function _fusionarDB(dbActual, dbEntrante){
+  let agregados=0;
+  if(!Array.isArray(dbActual.examenes)) dbActual.examenes=[];
+  if(Array.isArray(dbEntrante.examenes)){
+    const idsActuales=new Set(dbActual.examenes.map(r=>r.id));
+    dbEntrante.examenes.forEach(r=>{
+      if(r&&r.id&&!idsActuales.has(r.id)){ dbActual.examenes.push(r); idsActuales.add(r.id); agregados++; }
+    });
+  }
+  if(dbEntrante.materias){
+    if(!dbActual.materias) dbActual.materias={};
+    Object.keys(dbEntrante.materias).forEach(id=>{
+      if(!(id in dbActual.materias)){ dbActual.materias[id]=dbEntrante.materias[id]; agregados++; }
+    });
+  }
+  if(dbEntrante.notas){
+    if(!dbActual.notas) dbActual.notas={};
+    Object.keys(dbEntrante.notas).forEach(id=>{
+      if(!(id in dbActual.notas)){ dbActual.notas[id]=dbEntrante.notas[id]; agregados++; }
+    });
+  }
+  if(dbEntrante.perfil){
+    if(!dbActual.perfil) dbActual.perfil={nombre:''};
+    if(!dbActual.perfil.nombre&&dbEntrante.perfil.nombre) dbActual.perfil.nombre=dbEntrante.perfil.nombre;
+  }
+  return agregados;
+}
+let _backupPendiente=null;
 function importarDatos(e){
   const file=e.target.files[0];
-  if(!file) return;
+  if(!file){ return; }
   const reader=new FileReader();
-  reader.onload=async(ev)=>{
+  reader.onload=(ev)=>{
     try{
-      const paquete=JSON.parse(ev.target.result);
-      if(!confirm('Esto va a reemplazar todos tus datos actuales por los del backup. ¿Continuar?')) return;
-      localStorage.setItem('fig_salt', paquete.salt);
-      localStorage.setItem('fig_blob', JSON.stringify(paquete.blob));
-      toast('✅ Backup importado — ingresá con tu contraseña');
-      cerrarSesion();
-    }catch(err){ toast('❌ Archivo inválido'); e.target.value=''; }
+      _backupPendiente=JSON.parse(ev.target.result);
+      document.getElementById('imp-pass').value='';
+      document.getElementById('imp-err').style.display='none';
+      abrirModal('importar-backup');
+    }catch(err){ toast('❌ Archivo inválido'); }
+    finally{ e.target.value=''; }
   };
   reader.readAsText(file);
+}
+async function confirmarImportarBackup(){
+  const errEl=document.getElementById('imp-err');
+  errEl.style.display='none';
+  if(!_backupPendiente){ cerrarModal('importar-backup'); return; }
+  const pass=document.getElementById('imp-pass').value;
+  if(!pass){ errEl.textContent='Ingresá la contraseña'; errEl.style.display='block'; return; }
+  try{
+    const keyEntrante=await _deriveKey(pass, _backupPendiente.salt);
+    const dbEntrante=await _decryptJSON(_backupPendiente.blob, keyEntrante);
+    const agregados=_fusionarDB(DB, dbEntrante);
+    await save();
+    _backupPendiente=null;
+    cerrarModal('importar-backup');
+    renderBackupStatus();
+    if(typeof renderMas==='function') renderMas();
+    toast(agregados>0 ? '✅ Se sumaron '+agregados+' registros nuevos' : 'ℹ️ Ya tenías todo lo de ese backup');
+  }catch(err){
+    errEl.textContent='Contraseña incorrecta para ese backup';
+    errEl.style.display='block';
+  }
 }
 function forzarUpdate(){
   if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller){ toast('ℹ️ Sin actualizaciones pendientes'); return; }

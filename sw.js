@@ -1,4 +1,4 @@
-const CACHE = 'ingenieria-v1';
+const CACHE = 'ingenieria-v2';
 const PRECACHE = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
